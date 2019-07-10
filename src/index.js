@@ -37,9 +37,9 @@ ReactDOM.render(
     <Switch>
       <Route path="/admin" render={props => <AdminLayout {...props} />} />
       <Route path="/login" component={Login} />
-      <Route path="/calendar" component={DashboardCalendar} />
+      <Route path="/" component={Login} />
 
-      <Redirect to="/admin/dashboard" />
+      <Redirect to="/login" />
     </Switch>
   </Router>,
   document.getElementById("root")

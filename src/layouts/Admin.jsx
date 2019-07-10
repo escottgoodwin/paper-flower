@@ -35,6 +35,7 @@ import Product from "views/Product";
 import ProductUpdate from "views/ProductUpdate";
 import ProductAdd from "views/ProductAdd";
 
+import fire from '../firebase'
 
 import routes from "routes.js";
 
@@ -49,11 +50,27 @@ class Dashboard extends React.Component {
     };
     this.mainPanel = React.createRef();
   }
+
+  notSignedIn = () => {
+       this.props.history.push(`/login`)
+   }
+
   componentDidMount() {
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.mainPanel.current);
       document.body.classList.toggle("perfect-scrollbar-on");
     }
+
+    fire.auth().onAuthStateChanged(user =>  {
+      if (user) {
+          this.setState({
+            userName:user.displayName,
+          })
+      } else {
+        this.setState({name:'No user'})
+        this.notSignedIn()
+      }
+    });
   }
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -148,10 +165,6 @@ class Dashboard extends React.Component {
               component={ProductAdd}
               name='Add Product'
             />
-
-
-
-
 
           </Switch>
           <Footer fluid />
