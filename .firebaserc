@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "quandrio-ee823"
+  },
+  "targets": {
+    "quandrio-ee823": {
+      "hosting": {
+        "paper-flower": [
+          "paper-flower"
+        ]
+      }
+    }
+  }
+}
