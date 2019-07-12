@@ -16,6 +16,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+
 import React from "react";
 // react plugin used to create google maps
 import fire from '../firebase'
@@ -39,8 +40,6 @@ const mapStyles = {
 };
 
 const db = fire.firestore()
-
-let allViews = Object.keys(Views).map(k => Views[k])
 
 class DashboardCalendar extends React.Component {
 

@@ -68,13 +68,6 @@ var routes = [
     icon: "nc-icon nc-calendar-60",
     component: DashboardCalendar,
     layout: "/admin"
-  },
-  {
-    path: "/icons",
-    name: "Icons",
-    icon: "nc-icon nc-pin-3",
-    component: Icons,
-    layout: "/admin"
   }
 ];
 export default routes;
