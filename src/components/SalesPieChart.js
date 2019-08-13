@@ -192,8 +192,7 @@ class SalesPieChart extends Component {
         </CardBody>
         <CardFooter>
         <hr />
-          Inventory Total: {data.total}
-
+          Sales Total: {data.total}
         </CardFooter>
       </Card>
 )

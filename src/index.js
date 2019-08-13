@@ -28,7 +28,6 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 
 import AdminLayout from "layouts/Admin.jsx";
 import Login from "views/Login";
-import DashboardCalendar from "views/Calendar";
 
 const hist = createBrowserHistory();
 

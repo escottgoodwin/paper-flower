@@ -165,23 +165,24 @@ class CustomerList extends React.Component {
         <div className="content">
           <Row>
             <Col md="12">
-              <Card>
+              <Card >
                 <CardHeader>
                   <CardTitle className="text-primary" tag="h4">Customers</CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <Table responsive>
+
+                  <Table >
                     <thead className="text-primary">
                       <tr>
                         <th>Name</th>
-                        <th>Amount</th>
+                        <th>Amount ($)</th>
                         <th>Number</th>
                       </tr>
                     </thead>
                     <tbody>
                     {custs.map(p =>
 
-                      <tr>
+                      <tr key={p.customerId}>
                         <td>
                         <Link to={{
                           pathname: "customer_profile",
@@ -199,6 +200,7 @@ class CustomerList extends React.Component {
 
                     </tbody>
                   </Table>
+
                 </CardBody>
                 <CardFooter>
                 <Row>

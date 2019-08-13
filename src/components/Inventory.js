@@ -19,6 +19,7 @@ const database = fire.firestore()
 function Inventory() {
 
   const [ inventory, setInventory ] = useState()
+  const [ itemNum, setItemNum ] = useState()
 
   useEffect(() => {
     const products = []
@@ -67,15 +68,15 @@ function Inventory() {
         });
 
         const productslist = products.map(s => parseFloat(s.inventory))
-
+        const itemNum1 = products.length
         const productsSum =  productslist.reduce((a,b) => a + b, 0)
 
         setInventory(productsSum)
-
+        setItemNum(itemNum1)
       });
 
   });
-
+  
     return (
       <Card className="card-stats">
         <CardBody>
@@ -97,7 +98,7 @@ function Inventory() {
         <CardFooter>
           <hr />
           <div className="stats">
-            <i className="fas fa-sync-alt" /> Update Now
+            Number of Products: {itemNum}
           </div>
         </CardFooter>
       </Card>

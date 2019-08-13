@@ -152,10 +152,8 @@ render() {
           />
         </CardBody>
         <CardFooter>
-          <hr />
-          <div className="stats">
-            <i className="fa fa-history" /> Updated 3 minutes ago
-          </div>
+        <hr />
+          Inventory Total: 
         </CardFooter>
       </Card>
 )

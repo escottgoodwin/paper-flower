@@ -91,8 +91,6 @@ function Sales() {
 
     return (
       <>
-
-
       <Card className="card-stats">
         <CardBody>
           <Row>
@@ -113,7 +111,7 @@ function Sales() {
         <CardFooter>
           <hr />
           <div className="stats">
-            <i className="far fa-calendar" />Number of Sales: {number}
+            Number of Sales: {number}
           </div>
         </CardFooter>
       </Card>

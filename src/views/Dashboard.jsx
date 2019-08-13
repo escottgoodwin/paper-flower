@@ -1,21 +1,3 @@
-/*!
-
-=========================================================
-* Paper Dashboard React - v1.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-
-* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 // react plugin used to create charts
 import { Line, Pie, Bar } from "react-chartjs-2";
@@ -27,7 +9,8 @@ import {
   CardFooter,
   CardTitle,
   Row,
-  Col
+  Col,
+  Container
 } from "reactstrap";
 // core components
 import {
@@ -52,7 +35,8 @@ function Dashboard() {
     return (
       <>
         <div className="content">
-          <Row>
+        <Container >
+          <Row fluid>
             <Col lg="3" md="6" sm="6">
 
             <Inventory />
@@ -61,12 +45,12 @@ function Dashboard() {
             <Col lg="3" md="6" sm="6">
               <Sales />
             </Col>
-            <Col lg="3" md="6" sm="6">
+            <Col lg="3" md="6" sm="6" >
 
               <Salesmen />
 
             </Col>
-            <Col lg="3" md="6" sm="6">
+            <Col lg="3" md="6" sm="6" >
               <Customers />
             </Col>
           </Row>
@@ -99,18 +83,19 @@ function Dashboard() {
           </Row>
 
           <Row>
-            <Col md="6">
+            <Col md="12">
 
               <SalesPeopleList />
 
             </Col>
 
-            <Col md="6">
+            <Col md="12">
 
             <CustomerList />
 
             </Col>
           </Row>
+        </Container>
         </div>
       </>
     );

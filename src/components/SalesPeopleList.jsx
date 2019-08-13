@@ -160,23 +160,23 @@ class SalesPeopleList extends React.Component {
         <div className="content">
           <Row>
             <Col md="12">
-              <Card>
+              <Card >
                 <CardHeader>
                   <CardTitle className="text-success" tag="h4">Sales People</CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <Table responsive>
+                  <Table >
                     <thead className="text-success">
                       <tr>
                         <th>Name</th>
-                        <th>Amount</th>
+                        <th>Amount ($)</th>
                         <th>Number</th>
                       </tr>
                     </thead>
                     <tbody>
                     {salesmen.map(p =>
 
-                      <tr>
+                      <tr key={p.salesmanId}>
                         <td >
                         <Link to={{
                           pathname: "salesman_profile",

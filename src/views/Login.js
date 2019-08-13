@@ -19,7 +19,8 @@ import {
   Form,
   Input,
   Row,
-  Col
+  Col,
+  Alert
 } from "reactstrap";
 
 import fire from '../firebase'
@@ -84,7 +85,7 @@ class Login extends Component {
   props.history.push(`/admin/dashboard`)
 
   // ...
-}).catch(function(error) {
+}).catch((error) => {
   // Handle Errors here.
   var errorMessage = error.message;
   this.setState({errorMessage,showError:true})
@@ -100,7 +101,7 @@ class Login extends Component {
   props.history.push(`/admin/dashboard`)
 
   // ...
-}).catch(function(error) {
+}).catch((error) => {
   // Handle Errors here.
   var errorMessage = error.message;
   this.setState({errorMessage,showError:true})
@@ -111,38 +112,34 @@ class Login extends Component {
 
   twitterSignIn = (props) => {
     fire.auth().signInWithPopup(twitter).then(function(result) {
-  // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+      props.history.push(`/admin/dashboard`)
+    }).catch((error) => {
+      var errorMessage = error.message;
+      this.setState({errorMessage,showError:true})
+    });
+  }
 
-  props.history.push(`/admin/dashboard`)
+  emailSignIn = (props) => {
+    const { email, password } = this.state
+    
+    firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(function(result) {
+    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+    console.log(result)
+    props.history.push(`/admin/dashboard`)
 
-  // ...
-}).catch(function(error) {
-  // Handle Errors here.
-  var errorMessage = error.message;
-  this.setState({errorMessage,showError:true})
-  // ...
-});
-}
+    // ...
+    }).catch((error) => {
+    // Handle Errors here.
+    var errorMessage = error.message;
 
-emailSignIn = (props) => {
-  const { email, password } = this.state
+    this.setState({errorMessage,showError:true})
+    // ...
+    });
 
-  firebase.auth().signInWithEmailAndPassword(email, password)
-  .then(function(result) {
-  // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+  }
 
-  props.history.push(`/admin/dashboard`)
-
-  // ...
-  }).catch(function(error) {
-  // Handle Errors here.
-  var errorMessage = error.message;
-  this.setState({errorMessage,showError:true})
-  // ...
-  });
-
-}
-
+onDismiss = () => this.setState({showError:false})
 
   render(){
 
@@ -162,71 +159,74 @@ emailSignIn = (props) => {
     <center>
     <div style={{margin:20}}>
 
+
+
+
     <Card className="card-stats">
     <CardHeader>
-    <div><img src={logo} alt='logo' width="50" height="50"/></div>
-    <div>
-    <h3>Login</h3>
-    </div>
+      <div>
+        <img src={logo} alt='logo' width="50" height="50"/>
+      </div>
+      <div>
+        <h3>Login</h3>
+      </div>
     </CardHeader>
       <CardBody>
 
+        <Row>
+          <Col  md="4">
+             <FaGooglePlusSquare size={32} />
+          </Col>
+          <Col  md="4">
+            <FaTwitterSquare size={32}/>
+          </Col>
+          <Col  md="4">
+            <FaFacebook size={32} />
+          </Col>
+        </Row>
+        <div style={{margin:50}}>
+          <Form>
             <Row>
-            <Col  md="4">
-             <FaGooglePlusSquare size={32} onClick={() => this.googleSignIn(this.props)}/>
-            </Col>
-            <Col  md="4">
-            <FaTwitterSquare size={32} onClick={() => this.twitterSignIn(this.props)}/>
-            </Col>
-            <Col  md="4">
-            <FaFacebook size={32} onClick={() => this.facebookSignIn(this.props)} />
-            </Col>
-            </Row>
-            <div style={{margin:50}}>
-
-
-            <Form>
-
-              <Row>
-                  <Col className="pl-1" md="12">
-                    <FormGroup>
-                      <label >
-                        Email address
-                      </label>
-                      <Input placeholder="Email" type="email" />
-                    </FormGroup>
-                  </Col>
-                </Row>
-
-                <Row>
                 <Col className="pl-1" md="12">
-                  <FormGroup controlId="formBasicPassword">
+                  <FormGroup>
                     <label >
-                      Password
+                      Email address
                     </label>
-                    <Input placeholder="Password" type="password" />
+                    <Input onChange={e => this.setState({ email: e.target.value })} placeholder="Email" type="email" />
                   </FormGroup>
                 </Col>
-                </Row>
-
-                <Row>
+              </Row>
+              <Row>
+              <Col className="pl-1" md="12">
+                <FormGroup controlid="formBasicPassword">
+                  <label >
+                    Password
+                  </label>
+                  <Input onChange={e => this.setState({ password: e.target.value })} placeholder="Password" type="password" />
+                </FormGroup>
+              </Col>
+              </Row>
+              <Row>
                 <Col className="pl-1" md="12">
-                <Button variant="primary" type="submit">
-                Login
-              </Button>
-                </Col>
-                </Row>
-            </Form>
+                  <Button onClick={() => this.emailSignIn(this.props)} variant="primary" >
+                    Login
+                  </Button>
+                  </Col>
+              </Row>
+          </Form>
+        </div>
+      </CardBody>
+    </Card>
 
-            </div>
-
-            </CardBody>
-          </Card>
+    <div style={{height:50}}>
+    <Alert color="danger" isOpen={showError} toggle={this.onDismiss}>
+      <b>Error</b> {errorMessage}
+    </Alert>
+    </div>
       </div>
-
     </center>
-    </div>
-    </div>
+  </div>
+</div>
 
   );
 }

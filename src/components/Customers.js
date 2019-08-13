@@ -56,7 +56,7 @@ function Customers() {
         });
 
         setCount(customers.length)
-        
+
       });
   });
 
@@ -81,7 +81,7 @@ function Customers() {
         <CardFooter>
           <hr />
           <div className="stats">
-            <i className="fas fa-sync-alt" /> Update now
+            Updated: {new Date().toLocaleDateString("en-US")}
           </div>
         </CardFooter>
       </Card>

@@ -56,8 +56,8 @@ function chartSeries(grouped,column){
   const values = Object.values(grouped)
   const labels = Object.keys(grouped)
   const valueSeries = values.map(v => v.map(s => parseFloat(s[column])).reduce((a,b) => a + b, 0))
-  console.log()
   const datasets1 = values.map((currElement, i) => valueSeries[i])
+  const salesnum = valueSeries.reduce((a,b) => a + b, 0)
 
   var datasets = {
   label: 'Sales ($)',
@@ -74,7 +74,7 @@ function chartSeries(grouped,column){
   return {
       labels:Object.keys(grouped),
       datasets:[datasets],
-
+      salesnum
     }
   }
 
@@ -85,6 +85,7 @@ class SalesBarChart extends Component {
   state = {
       productNames:[],
       sales:[],
+      itemNum:'',
       data:{}
   }
 
@@ -114,7 +115,8 @@ class SalesBarChart extends Component {
       const productGroup = chartSeries(grouped,'price')
 
       this.setState({
-        data:productGroup
+        data:productGroup,
+        itemNum:productGroup.salesnum
       })
 
       })
@@ -148,21 +150,21 @@ class SalesBarChart extends Component {
 
         const grouped =  groupBy(sales,'productName')
         const productGroup = chartSeries(grouped,'price')
-
         this.setState({
-          data:productGroup
+          data:productGroup,
+          itemNum:productGroup.salesnum
       })
       });
 }
 
 render() {
-  const { data } = this.state
+  const { data, itemNum } = this.state
 
     return (
       <Card>
         <CardHeader>
-          <CardTitle tag="h5"><div className="text-success">Sales by Item</div></CardTitle>
-          <p className="card-category">24 Hours performance</p>
+          <CardTitle tag="h5">
+          <div className="text-success">Sales by Item</div></CardTitle>
         </CardHeader>
         <CardBody>
         <Bar
@@ -171,10 +173,9 @@ render() {
           />
         </CardBody>
         <CardFooter>
-          <hr />
-          <div className="stats">
-            <i className="fa fa-history" /> Updated 3 minutes ago
-          </div>
+        <hr />
+          Sales Total: {itemNum}
+
         </CardFooter>
       </Card>
 )

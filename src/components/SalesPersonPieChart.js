@@ -190,7 +190,10 @@ class SalesPersonPieChart extends Component {
         />
 
         </CardBody>
-
+        <CardFooter>
+        <hr />
+          Sales Total: {data.total}
+        </CardFooter>
       </Card>
 )
  }

@@ -81,7 +81,7 @@ function Salesmen() {
         <CardFooter>
           <hr />
           <div className="stats">
-            <i className="far fa-clock" /> In the last hour
+            Updated: {new Date().toLocaleDateString("en-US")}
           </div>
         </CardFooter>
       </Card>
