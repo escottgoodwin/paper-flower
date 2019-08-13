@@ -121,7 +121,7 @@ class Login extends Component {
 
   emailSignIn = (props) => {
     const { email, password } = this.state
-    
+
     firebase.auth().signInWithEmailAndPassword(email, password)
     .then(function(result) {
     // This gives you a Facebook Access Token. You can use it to access the Facebook API.
@@ -158,9 +158,6 @@ onDismiss = () => this.setState({showError:false})
 
     <center>
     <div style={{margin:20}}>
-
-
-
 
     <Card className="card-stats">
     <CardHeader>
