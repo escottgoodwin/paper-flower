@@ -1,42 +1,17 @@
 import React, { Component } from "react";
-// nodejs library to set properties for components
-// @material-ui/core
-
+import { groupBy } from '../util'
 import { Pie } from "react-chartjs-2";
 
 import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
   CardTitle,
-  Row,
-  Col
 } from "reactstrap";
 
 
 import fire from '../firebase'
 const db = fire.firestore()
-
-function groupBy(arr, criteria) {
-   return arr.reduce(function (obj, item) {
-
-// Check if the criteria is a function to run on the item or a property of it
-var key = typeof criteria === 'function' ? criteria(item) : item[criteria];
-
-// If the key doesn't exist yet, create it
-  if (!obj.hasOwnProperty(key)) {
-    obj[key] = [];
-  }
-
-  // Push the value to the object
-  obj[key].push(item);
-
-  // Return the object to the next item in the loop
-  return obj;
-
-}, {});
-};
 
 const options={
 
@@ -80,8 +55,9 @@ const options={
 function chartSeries(grouped,column){
   const values = Object.values(grouped)
   const labels = Object.keys(grouped)
-  const valueSeries = values.map(v => v.map(s => parseFloat(s[column])).reduce((a,b) => a + b, 0))
-  const total = valueSeries.reduce((a,b) => a + b, 0)
+  //const valueSeries = values.map(v => v.map(s => parseFloat(s[column])).reduce((a,b) => a + b, 0))
+  const valueSeries1 = values.map(s => s.map(p => p[column]).reduce((a,b) => a + b, 0))
+  const total = valueSeries1.reduce((a,b) => a + b, 0)
 
   return {
   total:total,
@@ -95,7 +71,7 @@ function chartSeries(grouped,column){
       'rgba(255, 206, 86, 0.4)',
       'rgba(255, 206, 186, 0.4)'
     ],
-      data: valueSeries
+      data: valueSeries1
     }
   ]
  }
@@ -117,22 +93,16 @@ class SalesPieChart extends Component {
 
         const sale = {
           docId:doc.id,
-          productName:doc.data().productName,
-          productId:doc.data().productId,
-          price:doc.data().price,
-          productImg:doc.data().productImg,
-          customer:doc.data().customer,
-          customerId:doc.data().customerId,
-          salesmanId:doc.data().salesmanId,
-          salesman:doc.data().salesman,
-          uid:doc.data().uid
+          ...doc.data()
         }
 
         sales.push(sale)
       });
 
-      const grouped =  groupBy(sales,'productName')
-      const productGroup = chartSeries(grouped,'price')
+      const salesList = sales.map(s => s.saleProducts.map(p => ({productName:p.name,productTotal:p.productTotal}))).flat()
+
+      const grouped =  groupBy(salesList,'productName')
+      const productGroup = chartSeries(grouped,'productTotal')
 
       this.setState({data:productGroup})
 
@@ -151,22 +121,17 @@ class SalesPieChart extends Component {
 
           const sale = {
             docId:doc.id,
-            productName:doc.data().productName,
-            productId:doc.data().productId,
-            price:doc.data().price,
-            productImg:doc.data().productImg,
-            customer:doc.data().customer,
-            customerId:doc.data().customerId,
-            salesmanId:doc.data().salesmanId,
-            salesman:doc.data().salesman,
-            uid:doc.data().uid
+            ...doc.data()
           }
 
           sales.push(sale)
         });
 
-        const grouped =  groupBy(sales,'productName')
-        const productGroup = chartSeries(grouped,'price')
+        const salesList = sales.map(s => s.saleProducts.map(p => ({productName:p.name,productTotal:p.productTotal}))).flat()
+
+        const grouped =  groupBy(salesList,'productName')
+        const productGroup = chartSeries(grouped,'productTotal')
+
 
         this.setState({data:productGroup})
 
@@ -190,10 +155,7 @@ class SalesPieChart extends Component {
         />
 
         </CardBody>
-        <CardFooter>
-        <hr />
-          Sales Total: {data.total}
-        </CardFooter>
+
       </Card>
 )
  }

@@ -1,23 +1,5 @@
-/*!
-
-=========================================================
-* Paper Dashboard React - v1.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-
-* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-import React,{Component} from "react";
-import { Link } from "react-router-dom";
+import React,{Component} from "react"
+import { Link } from "react-router-dom"
 
 // reactstrap components
 import {
@@ -30,77 +12,71 @@ import {
   Table,
   Row,
   Col
-} from "reactstrap";
+} from "reactstrap"
 
 import SalesPieChart from 'components/SalesPieChart'
-
+import InventoryBarChart from '../components/InventoryBarChart'
 import fire from '../firebase'
 const database = fire.firestore()
 
 class ProductList extends Component {
 
   state = {
-    data:[],
     products:[]
   }
   componentDidMount(){
 
   // Initial call for products list
-  const products = []
-  database.collection('products').get()
-  .then((snapshot) => {
+  const ref = database.collection('products')
 
+  ref.get()
+  .then((snapshot) => {
+    const products = []
     snapshot.forEach((doc) => {
 
-      const item = [
-        doc.data().name,
-        doc.data().price,
-        doc.data().inventory,
-      ]
+      const item = {
+        productId:doc.id,
+        ...doc.data()
+      }
 
         products.push(item)
 
-      });
+      })
 
     this.setState({
-      data:products,
       products
-    });
+    })
 
   })
   .catch((err) => {
-    console.log('Error getting documents', err);
-  });
+    console.log('Error getting documents', err)
+  })
 
-  database.collection('products')
-  .onSnapshot(snapshot => {
+  ref.onSnapshot(snapshot => {
       const products = []
 
       snapshot.forEach(doc => {
 
         const item = {
           productId:doc.id,
-          name:doc.data().name,
-          price:doc.data().price,
-          inventory:doc.data().inventory,
+          ...doc.data()
         }
 
           products.push(item)
 
-        });
+        })
 
       this.setState({
-        data:products,
         products
-      });
+      })
 
-      });
+      })
 
 
 }
 
   render(){
-      const { data, products } = this.state
+      const { products } = this.state
 
     return (
       <>
@@ -123,9 +99,9 @@ class ProductList extends Component {
                     </thead>
                     <tbody>
 
-                    {products.map(p =>
+                    {products.map((p,i) =>
 
-                      <tr>
+                      <tr key={i}>
                         <td>
                         <Link to={{
                           pathname: "product_profile",
@@ -174,11 +150,24 @@ class ProductList extends Component {
 
           </Row>
 
-          <SalesPieChart />
+          <Row>
+            <Col md="6">
+
+              <SalesPieChart />
+
+            </Col>
+
+            <Col md="6">
+
+              <InventoryBarChart />
+
+            </Col>
+          </Row>
+
         </div>
       </>
-    );
+    )
   }
 }
 
-export default ProductList;
+export default ProductList

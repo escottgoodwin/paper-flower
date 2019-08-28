@@ -1,42 +1,15 @@
 import React, { Component } from "react";
-// nodejs library to set properties for components
-// @material-ui/core
-
 import { Pie } from "react-chartjs-2";
 
 import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
   CardTitle,
-  Row,
-  Col
 } from "reactstrap";
-
 
 import fire from '../firebase'
 const db = fire.firestore()
-
-function groupBy(arr, criteria) {
-   return arr.reduce(function (obj, item) {
-
-// Check if the criteria is a function to run on the item or a property of it
-var key = typeof criteria === 'function' ? criteria(item) : item[criteria];
-
-// If the key doesn't exist yet, create it
-  if (!obj.hasOwnProperty(key)) {
-    obj[key] = [];
-  }
-
-  // Push the value to the object
-  obj[key].push(item);
-
-  // Return the object to the next item in the loop
-  return obj;
-
-}, {});
-};
 
 const options={
   pieceLabel: {
@@ -163,7 +136,7 @@ class InventoryPieChart extends Component {
 
   render(){
     const { data } = this.state
-  
+
     return (
       <Card>
         <CardHeader>
@@ -177,10 +150,7 @@ class InventoryPieChart extends Component {
         />
 
         </CardBody>
-        <CardFooter>
-        <hr />
-          Inventory Total: {data.total}
-        </CardFooter>
+
       </Card>
 )
  }

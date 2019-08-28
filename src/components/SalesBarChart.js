@@ -1,18 +1,13 @@
 import React, { Component } from "react";
-// nodejs library to set properties for components
-// @material-ui/core
 
-import { Line, Pie, Bar } from "react-chartjs-2";
-
+import { Bar } from "react-chartjs-2";
+import { groupBy } from '../util'
 
 import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
   CardTitle,
-  Row,
-  Col
 } from "reactstrap";
 
 
@@ -29,56 +24,30 @@ const options= {
      }
  }
 
-function groupBy(arr, criteria) {
-   return arr.reduce(function (obj, item) {
-
-// Check if the criteria is a function to run on the item or a property of it
-var key = typeof criteria === 'function' ? criteria(item) : item[criteria];
-
-// If the key doesn't exist yet, create it
-  if (!obj.hasOwnProperty(key)) {
-    obj[key] = [];
-  }
-
-  // Push the value to the object
-  obj[key].push(item);
-
-  // Return the object to the next item in the loop
-  return obj;
-
-}, {});
-};
-
-
-
-
 function chartSeries(grouped,column){
   const values = Object.values(grouped)
   const labels = Object.keys(grouped)
-  const valueSeries = values.map(v => v.map(s => parseFloat(s[column])).reduce((a,b) => a + b, 0))
-  const datasets1 = values.map((currElement, i) => valueSeries[i])
-  const salesnum = valueSeries.reduce((a,b) => a + b, 0)
+  const valueSeries1 = values.map(s => s.map(p => p[column]).reduce((a,b) => a + b, 0))
+  const data = values.map((currElement, i) => valueSeries1[i])
+  const salesnum = valueSeries1.reduce((a,b) => a + b, 0)
 
-  var datasets = {
+  var datasets = [{
   label: 'Sales ($)',
-  data: datasets1,
+  data,
   backgroundColor: [
          'rgba(255, 99, 132, 0.4)',
          'rgba(54, 162, 235, 0.4)',
          'rgba(255, 206, 86, 0.4)',
          'rgba(255, 206, 186, 0.4)'
       ]
-};
-
+}]
 
   return {
-      labels:Object.keys(grouped),
-      datasets:[datasets],
+      labels,
+      datasets,
       salesnum
     }
   }
-
-
 
 class SalesBarChart extends Component {
 
@@ -90,29 +59,24 @@ class SalesBarChart extends Component {
   }
 
   componentDidMount() {
+    const ref = db.collection('sales')
     const sales = []
-    db.collection('sales').get()
+    ref.get()
     .then((snapshot) => {
       snapshot.forEach((doc) => {
 
         const sale = {
           docId:doc.id,
-          productName:doc.data().productName,
-          productId:doc.data().productId,
-          price:doc.data().price,
-          productImg:doc.data().productImg,
-          customer:doc.data().customer,
-          customerId:doc.data().customerId,
-          salesmanId:doc.data().salesmanId,
-          salesman:doc.data().salesman,
-          uid:doc.data().uid
+          ...doc.data()
         }
 
         sales.push(sale)
       });
 
-      const grouped =  groupBy(sales,'productName')
-      const productGroup = chartSeries(grouped,'price')
+      const salesList = sales.map(s => s.saleProducts.map(p => ({productName:p.name,productTotal:p.productTotal}))).flat()
+
+      const grouped =  groupBy(salesList,'productName')
+      const productGroup = chartSeries(grouped,'productTotal')
 
       this.setState({
         data:productGroup,
@@ -124,32 +88,23 @@ class SalesBarChart extends Component {
       console.log('Error getting documents', err);
     });
 
-
-    //listener that updates if a sale is added
-    db.collection("sales")
-    .onSnapshot(snapshot => {
+    ref.onSnapshot(snapshot => {
         let sales = [];
 
         snapshot.forEach(doc => {
 
           const sale = {
             docId:doc.id,
-            productName:doc.data().productName,
-            productId:doc.data().productId,
-            price:doc.data().price,
-            productImg:doc.data().productImg,
-            customer:doc.data().customer,
-            customerId:doc.data().customerId,
-            salesmanId:doc.data().salesmanId,
-            salesman:doc.data().salesman,
-            uid:doc.data().uid
+            ...doc.data()
           }
 
           sales.push(sale)
         });
 
-        const grouped =  groupBy(sales,'productName')
-        const productGroup = chartSeries(grouped,'price')
+        const salesList = sales.map(s => s.saleProducts.map(p => ({productName:p.name,productTotal:p.productTotal}))).flat()
+        const grouped =  groupBy(salesList,'productName')
+        const productGroup = chartSeries(grouped,'productTotal')
+
         this.setState({
           data:productGroup,
           itemNum:productGroup.salesnum
@@ -158,7 +113,7 @@ class SalesBarChart extends Component {
 }
 
 render() {
-  const { data, itemNum } = this.state
+  const { data } = this.state
 
     return (
       <Card>
@@ -172,11 +127,7 @@ render() {
           options={options}
           />
         </CardBody>
-        <CardFooter>
-        <hr />
-          Sales Total: {itemNum}
 
-        </CardFooter>
       </Card>
 )
 }

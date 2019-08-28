@@ -1,10 +1,7 @@
 import React,{Component} from "react";
 import firebase from 'firebase/app';
 import 'firebase/auth'
-import { Link } from 'react-router-dom'
 // nodejs library to set properties for components
-import PropTypes from "prop-types";
-import { withRouter } from 'react-router-dom'
 import { FaFacebook, FaGooglePlusSquare, FaTwitterSquare } from 'react-icons/fa';
 // @material-ui/core components
 
@@ -13,8 +10,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
-  CardTitle,
   FormGroup,
   Form,
   Input,
@@ -34,37 +29,6 @@ var google = new firebase.auth.GoogleAuthProvider();
 var facebook = new firebase.auth.FacebookAuthProvider();
 
 var twitter = new firebase.auth.TwitterAuthProvider();
-
-const styles = {
-  cardCategoryWhite: {
-    "&,& a,& a:hover,& a:focus": {
-      color: "rgba(255,255,255,.62)",
-      margin: "0",
-      fontSize: "14px",
-      marginTop: "0",
-      marginBottom: "0"
-    },
-    "& a,& a:hover,& a:focus": {
-      color: "#FFFFFF"
-    }
-  },
-  cardTitleWhite: {
-    color: "black",
-    marginTop: "0px",
-    minHeight: "auto",
-    fontWeight: "300",
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: "3px",
-    textDecoration: "none",
-    "& small": {
-      color: "#777",
-      fontSize: "65%",
-      fontWeight: "400",
-      lineHeight: "1"
-    }
-  }
-};
-
 
 class Login extends Component {
 
@@ -142,9 +106,7 @@ class Login extends Component {
 onDismiss = () => this.setState({showError:false})
 
   render(){
-
-      const { classes } = this.props;
-      const { email, password, showPassword, showError, errorMessage } = this.state
+      const { showError, errorMessage } = this.state
 
   return (
 
@@ -168,7 +130,7 @@ onDismiss = () => this.setState({showError:false})
         <h3>Login</h3>
       </div>
     </CardHeader>
-      <CardBody>
+    <CardBody>
 
         <Row>
           <Col  md="4">

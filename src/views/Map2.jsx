@@ -1,5 +1,5 @@
 import React from "react";
-// react plugin used to create google maps
+import { groupBy } from '../util'
 import {
   withScriptjs,
   withGoogleMap,
@@ -163,11 +163,6 @@ const MapWrapper = withScriptjs(
 					    position={{ lat: item.customerLat, lng: item.customerLong}}
 					    onClick={() => props.handleToggleOpen(item)}
               animation={2}
-              icon={{
-                  url: 'https://i.dlpng.com/static/png/1372955_thumb.png',
-                  scaledSize:{height:40,width:30}
-
-              }}
 					/>
 
 				{JSON.stringify(props.position) === JSON.stringify({ lat: item.customerLat, lng: item.customerLong}) &&
@@ -184,28 +179,6 @@ const MapWrapper = withScriptjs(
   ))
 );
 
-
-
-function groupBy(arr, criteria) {
-   return arr.reduce(function (obj, item) {
-
-// Check if the criteria is a function to run on the item or a property of it
-var key = typeof criteria === 'function' ? criteria(item) : item[criteria];
-
-// If the key doesn't exist yet, create it
-  if (!obj.hasOwnProperty(key)) {
-    obj[key] = [];
-  }
-
-  // Push the value to the object
-  obj[key].push(item);
-
-  // Return the object to the next item in the loop
-  return obj;
-
-}, {});
-};
-
 function personSalesList1(arr){
     let customers = []
     for (const [ key, value ] of Object.entries(arr)) {
@@ -213,7 +186,7 @@ function personSalesList1(arr){
       const customerId = value.map(c => c.customerId)[0]
       const customerLat = value.map(c => c.customerLat)[0]
       const customerLong = value.map(c => c.customerLong)[0]
-      const sales = value.map(p => parseFloat(p.price)).reduce((a,b) => a + b, 0)
+      const sales = value.map(p => parseFloat(p.cartTotal)).reduce((a,b) => a + b, 0)
 
       let item = {customerId:customerId, name:key, customerLat:parseFloat(customerLat), customerLong:parseFloat(customerLong), sales:sales, number:number,msg: key + ' - $' + sales}
       customers.push(item)
@@ -254,10 +227,7 @@ class Map extends React.Component {
     .then((snapshot) => {
       snapshot.forEach((doc) => {
         const customer = {
-          name: doc.data().name,
-          lat:doc.data().lat,
-          long:doc.data().long,
-          phone:doc.data().phone
+          ...doc.data()
         }
         customers.push(customer)
       })
@@ -270,17 +240,7 @@ class Map extends React.Component {
 
         const sale = {
           docId:doc.id,
-          productName:doc.data().productName,
-          productId:doc.data().productId,
-          price:doc.data().price,
-          productImg:doc.data().productImg,
-          customer:doc.data().customer,
-          customerImg:doc.data().customerImg,
-          customerLat:doc.data().customerLat,
-          customerLong:doc.data().customerLong,
-          salesmanId:doc.data().salesmanId,
-          salesman:doc.data().salesman,
-          uid:doc.data().uid
+          ...doc.data()
         }
         sales.push(sale)
       });
@@ -306,17 +266,7 @@ class Map extends React.Component {
 
           const sale = {
             docId:doc.id,
-            productName:doc.data().productName,
-            productId:doc.data().productId,
-            price:doc.data().price,
-            productImg:doc.data().productImg,
-            customer:doc.data().customer,
-            customerId:doc.data().customerId,
-            customerLat:doc.data().customerLat,
-            customerLong:doc.data().customerLong,
-            salesmanId:doc.data().salesmanId,
-            salesman:doc.data().salesman,
-            uid:doc.data().uid
+            ...doc.data()
           }
 
           sales.push(sale)
@@ -324,7 +274,7 @@ class Map extends React.Component {
 
         const groupedCust = groupBy(sales,'customer')
         const customers = personSalesList1(groupedCust)
-        console.log(customers)
+
         this.setState({
           sales:customers
         });
@@ -332,8 +282,6 @@ class Map extends React.Component {
       });
 
     }
-
-
 
   render() {
     const { sales, position } = this.state

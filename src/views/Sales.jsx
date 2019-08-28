@@ -1,25 +1,6 @@
-/*!
-
-=========================================================
-* Paper Dashboard React - v1.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-
-* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React,{Component} from "react";
-import { Link } from "react-router-dom";
 
-// reactstrap components
+import moment from 'moment'
 import {
   Card,
   CardHeader,
@@ -46,23 +27,16 @@ class SalesList extends Component {
 
   componentDidMount(){
 
-  // Initial call for sales list
   const sales = []
-  db.collection('sales').get()
+  db.collection('sales')
+  .orderBy("saleDate", "desc")
+  .get()
   .then((snapshot) => {
     snapshot.forEach((doc) => {
 
       const sale = {
         docId:doc.id,
-        productName:doc.data().productName,
-        productId:doc.data().productId,
-        price:doc.data().price,
-        productImg:doc.data().productImg,
-        customer:doc.data().customer,
-        customerId:doc.data().customerId,
-        salesmanId:doc.data().salesmanId,
-        salesman:doc.data().salesman,
-        uid:doc.data().uid
+        ...doc.data()
       }
 
       sales.push(sale)
@@ -77,9 +51,8 @@ class SalesList extends Component {
     console.log('Error getting documents', err);
   });
 
-
-  //listener that updates if a sale is added
   db.collection("sales")
+  .orderBy("saleDate", "desc")
   .onSnapshot(snapshot => {
       let sales = [];
 
@@ -87,15 +60,7 @@ class SalesList extends Component {
 
         const sale = {
           docId:doc.id,
-          productName:doc.data().productName,
-          productId:doc.data().productId,
-          price:doc.data().price,
-          productImg:doc.data().productImg,
-          customer:doc.data().customer,
-          customerId:doc.data().customerId,
-          salesmanId:doc.data().salesmanId,
-          salesman:doc.data().salesman,
-          uid:doc.data().uid
+          ...doc.data()
         }
 
         sales.push(sale)
@@ -111,8 +76,7 @@ class SalesList extends Component {
   }
 
   render(){
-      const { classes } = this.props;
-      const { sales } = this.state
+    const { sales } = this.state
     return (
       <>
         <div className="content">
@@ -135,20 +99,22 @@ class SalesList extends Component {
                     <thead className="text-success">
                       <tr>
                         <th>Company</th>
-                        <th>Product</th>
-                        <th>Price</th>
+                        <th>Date</th>
+                        <th>Products</th>
+                        <th>Total</th>
                         <th>Salesman</th>
 
                       </tr>
                     </thead>
                     <tbody>
 
-                    {sales.map(p =>
+                    {sales.map((p,i) =>
 
-                      <tr>
+                      <tr key={i}>
                         <td>{p.customer}</td>
-                        <td>{p.productName}</td>
-                        <td>{p.price}</td>
+                        <td>{moment(p.saleDate.toDate()).calendar()}</td>
+                        <td>{p.saleProducts.length}</td>
+                        <td>${p.cartTotal}</td>
                         <td>{p.salesman}</td>
                       </tr>
 

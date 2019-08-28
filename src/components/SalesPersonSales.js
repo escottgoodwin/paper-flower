@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-// nodejs library to set properties for components
-// @material-ui/core
+import moment from 'moment'
 
 import {
   Card,
@@ -8,8 +7,6 @@ import {
   CardBody,
   CardFooter,
   CardTitle,
-  Row,
-  Col,
   Table
 } from "reactstrap";
 
@@ -34,36 +31,23 @@ class SalesPersonSales extends Component {
   const sales = []
   db.collection('sales')
   .where("salesmanId", "==", salesmanId)
+  .orderBy("saleDate", "desc")
   .get()
   .then((snapshot) => {
     snapshot.forEach((doc) => {
 
       const sale = {
         docId:doc.id,
-        productName:doc.data().productName,
-        productId:doc.data().productId,
-        price:doc.data().price,
-        productImg:doc.data().productImg,
-        customer:doc.data().customer,
-        customerId:doc.data().customerId,
-        salesmanId:doc.data().salesmanId,
-        salesman:doc.data().salesman,
-        uid:doc.data().uid
+        ...doc.data()
       }
 
       sales.push(sale)
     });
 
-    const data = sales.map(s => [s.customer, s.productName, s.price, s.salesman])
-
-    const totalValue = sales.map(s => parseFloat(s.price)).reduce((a,b) => a + b, 0)
-
-    const totalNum = data.length
+    const totalValue = sales.map(s => parseFloat(s.cartTotal)).reduce((a,b) => a + b, 0)
 
     this.setState({
-      data,
       sales,
-      totalNum,
       totalValue
     });
 
@@ -76,6 +60,7 @@ class SalesPersonSales extends Component {
   //listener that updates if a sale is added
   db.collection("sales")
   .where("salesmanId", "==", salesmanId)
+  .orderBy("saleDate", "desc")
   .onSnapshot(snapshot => {
       let sales = [];
 
@@ -83,40 +68,27 @@ class SalesPersonSales extends Component {
 
         const sale = {
           docId:doc.id,
-          productName:doc.data().productName,
-          productId:doc.data().productId,
-          price:doc.data().price,
-          productImg:doc.data().productImg,
-          customer:doc.data().customer,
-          customerId:doc.data().customerId,
-          salesmanId:doc.data().salesmanId,
-          salesman:doc.data().salesman,
-          uid:doc.data().uid
+          ...doc.data()
         }
 
         sales.push(sale)
       });
 
-      const data = sales.map(s => [s.customer, s.productName, s.price, s.salesman])
-
-      const totalValue = sales.map(s => parseFloat(s.price)).reduce((a,b) => a + b, 0)
-
-      const totalNum = data.length
+      const totalValue = sales.map(s => parseFloat(s.cartTotal)).reduce((a,b) => a + b, 0)
 
       this.setState({
-        data,
         sales,
-        totalNum,
         totalValue
       });
+
 
     });
 
   }
 
   render(){
-      const { classes  } = this.props;
-      const { sales, totalNum, totalValue } = this.state
+    
+      const { sales, totalValue } = this.state
 
     return (
       <Card>
@@ -128,19 +100,21 @@ class SalesPersonSales extends Component {
           <Table responsive>
             <thead className="text-success">
               <tr>
-                <th>Product</th>
-                <th>Price</th>
+                <th>Date</th>
+                <th>Products</th>
+                <th>Total</th>
                 <th>Customer</th>
 
               </tr>
             </thead>
             <tbody>
 
-            {sales.map(p =>
+            {sales.map((p,i) =>
 
-              <tr>
-                <td>{p.productName}</td>
-                <td>{p.price}</td>
+              <tr key={i}>
+                <td>{moment(p.saleDate.toDate()).calendar()}</td>
+                <td>{p.saleProducts.length}</td>
+                <td>${p.cartTotal}</td>
                 <td>{p.customer}</td>
               </tr>
 
@@ -149,6 +123,10 @@ class SalesPersonSales extends Component {
             </tbody>
           </Table>
         </CardBody>
+        <CardFooter>
+        <hr/>
+        <h5>Total: ${totalValue}</h5>
+        </CardFooter>
       </Card>
     )
 }

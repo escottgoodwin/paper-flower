@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
-// nodejs library to set properties for components
-// @material-ui/core
+import React, { Component } from "react";
+import moment from 'moment'
 
 import {
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
   CardTitle,
@@ -16,50 +14,49 @@ import {
 import fire from '../firebase'
 const database = fire.firestore()
 
-function Salesmen() {
+class Salesmen extends Component {
 
-  const [ count, setCount ] = useState(0)
+  state = {
+    count:0,
+    lastAdded:null
+  }
 
-  useEffect(() => {
-    const customers = []
-    database.collection('users').get()
+  componentDidMount(){
+    const ref = database.collection('users').orderBy("addedDate", "desc")
+
+    ref.get()
     .then((snapshot) => {
+      const customers = []
       snapshot.forEach((doc) => {
-        const customer = {docId:doc.id,
-        name:doc.data().name,
-        uid:doc.data().uid
+        const customer = {
+          docId:doc.id,
+          ...doc.data()
         }
-
         customers.push(customer)
       });
-
-      setCount(customers.length)
+      this.setState({count:customers.length,lastAdded:customers[0]})
     })
     .catch((err) => {
       console.log('Error getting documents', err);
     });
 
-
-    //listener that updates if a flower is added
-    database.collection("users")
-    .onSnapshot(snapshot => {
+    ref.onSnapshot(snapshot => {
         let customers = [];
 
         snapshot.forEach(doc => {
-          const customer = {docId:doc.id,
-          name:doc.data().name,
-          uid:doc.data().uid
+          const customer = {
+            docId:doc.id,
+          ...doc.data()
           }
-
           customers.push(customer)
         });
-
-        setCount(customers.length)
-
+        this.setState({count:customers.length,lastAdded:customers[0]})
       });
 
-  });
+  }
 
+render() {
+    const { count, lastAdded } = this.state
     return (
       <Card className="card-stats">
         <CardBody>
@@ -71,7 +68,7 @@ function Salesmen() {
             </Col>
             <Col md="8" xs="7">
               <div className="numbers">
-                <p className="card-category">Salespeople</p>
+                <p className="card-category">Sales People</p>
                 <CardTitle tag="p">{count}</CardTitle>
                 <p />
               </div>
@@ -80,12 +77,24 @@ function Salesmen() {
         </CardBody>
         <CardFooter>
           <hr />
+          {lastAdded!==null &&
           <div className="stats">
-            Updated: {new Date().toLocaleDateString("en-US")}
+            <div>
+            Last Added:
+            </div>
+            <div>
+             {lastAdded.name}
+             </div>
+             <div>
+            {moment(lastAdded.addedDate.toDate()).calendar()}
+             </div>
           </div>
+        }
+
         </CardFooter>
       </Card>
-)
+    )
+  }
 }
 
 

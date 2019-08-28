@@ -1,18 +1,12 @@
 import React, { Component } from "react";
-// nodejs library to set properties for components
-// @material-ui/core
-
-import { Line, Pie, Bar } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 
 
 import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
   CardTitle,
-  Row,
-  Col
 } from "reactstrap";
 
 
@@ -28,26 +22,6 @@ const options= {
          }]
      }
  }
-
-function groupBy(arr, criteria) {
-   return arr.reduce(function (obj, item) {
-
-// Check if the criteria is a function to run on the item or a property of it
-var key = typeof criteria === 'function' ? criteria(item) : item[criteria];
-
-// If the key doesn't exist yet, create it
-  if (!obj.hasOwnProperty(key)) {
-    obj[key] = [];
-  }
-
-  // Push the value to the object
-  obj[key].push(item);
-
-  // Return the object to the next item in the loop
-  return obj;
-
-}, {});
-};
 
 function chartSeries(products){
   const names = products.map(p => p.name)
@@ -69,9 +43,8 @@ function chartSeries(products){
     return {
         labels:names,
         datasets:[datasets],
-
       }
-}
+  }
 
 
 class InventoryBarChart extends Component {
@@ -109,10 +82,6 @@ class InventoryBarChart extends Component {
     console.log('Error getting documents', err);
   });
 
-
-
-
-  //listener that updates if a product is added
   db.collection("products")
   .onSnapshot(snapshot => {
       let products = [];
@@ -151,10 +120,6 @@ render() {
           options={options}
           />
         </CardBody>
-        <CardFooter>
-        <hr />
-          Inventory Total: 
-        </CardFooter>
       </Card>
 )
 }

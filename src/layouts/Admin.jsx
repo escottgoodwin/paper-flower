@@ -6,7 +6,6 @@ import { Route, Switch } from "react-router-dom";
 import DemoNavbar from "components/Navbars/DemoNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import Sidebar from "components/Sidebar/Sidebar.jsx";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.jsx";
 import Customer from "views/Customer";
 import CustomerUpdate from "views/CustomerUpdate";
 import CustomerAdd from "views/CustomerAdd";
@@ -45,7 +44,7 @@ class Dashboard extends React.Component {
     }
 
     fire.auth().onAuthStateChanged(user =>  {
-      
+
       if (user) {
           this.setState({
             userName:user.displayName,

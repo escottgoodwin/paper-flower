@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
-// nodejs library to set properties for components
-// @material-ui/core
+import React, { Component } from "react";
+import moment from 'moment'
 
 import {
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
   CardTitle,
@@ -12,71 +10,68 @@ import {
   Col
 } from "reactstrap";
 
-
 import fire from '../firebase'
 const database = fire.firestore()
 
-function Inventory() {
+class Inventory extends Component {
 
-  const [ inventory, setInventory ] = useState()
-  const [ itemNum, setItemNum ] = useState()
+  state = {
+    inventory:'',
+    itemNum:0,
+    lastAdded:null
+  }
 
-  useEffect(() => {
-    const products = []
-    database.collection('products').get()
+  componentDidMount(){
+    const ref = database.collection('products').orderBy("addedDate", "desc")
+
+    ref.get()
     .then((snapshot) => {
+      const products = []
       snapshot.forEach((doc) => {
+
         const product = {
           docId:doc.id,
-          name:doc.data().name,
-          price:doc.data().price,
-          inventory:doc.data().inventory,
-          productImg:doc.data().productImg,
-          uid:doc.data().uid
+          ...doc.data()
         }
 
         products.push(product)
+
       });
+
       const productslist = products.map(s => parseFloat(s.inventory))
 
       const productsSum =  productslist.reduce((a,b) => a + b, 0)
 
-      setInventory(productsSum)
+      this.setState({inventory:productsSum,lastAdded:products[0]})
 
     })
     .catch((err) => {
       console.log('Error getting documents', err);
-    });
+    })
 
-
-    //listener that updates if a product is added
-    database.collection("products")
-    .onSnapshot(snapshot => {
+    ref.onSnapshot(snapshot => {
         let products = [];
 
         snapshot.forEach(doc => {
           const product = {
             docId:doc.id,
-            name:doc.data().name,
-            price:doc.data().price,
-            inventory:doc.data().inventory,
-            productImg:doc.data().productImg,
-            uid:doc.data().uid
+            ...doc.data()
           }
 
           products.push(product)
         });
 
         const productslist = products.map(s => parseFloat(s.inventory))
-        const itemNum1 = products.length
         const productsSum =  productslist.reduce((a,b) => a + b, 0)
 
-        setInventory(productsSum)
-        setItemNum(itemNum1)
-      });
+        this.setState({inventory:productsSum,lastAdded:products[0]})
+      })
 
-  });
-  
+  }
+
+  render(){
+    const { inventory, lastAdded } = this.state
+
     return (
       <Card className="card-stats">
         <CardBody>
@@ -97,13 +92,23 @@ function Inventory() {
         </CardBody>
         <CardFooter>
           <hr />
+          {lastAdded!==null &&
           <div className="stats">
-            Number of Products: {itemNum}
+            <div>
+            Last Product Added:
+            </div>
+            <div>
+             {lastAdded.name}
+             </div>
+             <div>
+             {moment(lastAdded.addedDate.toDate()).calendar()}
+             </div>
           </div>
+        }
         </CardFooter>
       </Card>
-)
+    )
+  }
 }
-
 
 export default Inventory

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-// nodejs library to set properties for components
-// @material-ui/core
+import moment from 'moment'
 
 import {
   Card,
@@ -8,8 +7,6 @@ import {
   CardBody,
   CardFooter,
   CardTitle,
-  Row,
-  Col,
   Table
 } from "reactstrap";
 
@@ -20,125 +17,88 @@ const db = fire.firestore()
 class ProductSales extends Component {
 
   state = {
-    data:[],
-    sales:[],
-    totalNum:0,
-    totalValue:0
+    totalValue:0,
+    items:[]
   }
 
   componentDidMount(){
 
   const { productId } = this.props
 
-  // Initial call for sales list
-  const sales = []
-  db.collection('sales')
-  .where("productId", "==", productId)
-  .get()
-  .then((snapshot) => {
-    snapshot.forEach((doc) => {
+  const ref = db.collection('sales')
+  .where("productIds", "array-contains", productId)
+  .orderBy("saleDate", "desc")
 
+  ref.get()
+  .then((snapshot) => {
+    const sales = []
+    snapshot.forEach((doc) => {
       const sale = {
         docId:doc.id,
-        productName:doc.data().productName,
-        productId:doc.data().productId,
-        price:doc.data().price,
-        productImg:doc.data().productImg,
-        customer:doc.data().customer,
-        customerId:doc.data().customerId,
-        salesmanId:doc.data().salesmanId,
-        salesman:doc.data().salesman,
-        uid:doc.data().uid
+        ...doc.data()
       }
-
       sales.push(sale)
     });
 
-    const data = sales.map(s => [s.customer, s.productName, s.price, s.salesman])
+    const items = sales.map(i => [i.customer,i.saleProducts.filter(p => p.docId === productId)[0].productTotal, moment(i.saleDate.toDate()).calendar(),i.salesman])
+    const totalValue = sales.map(i => i.saleProducts.filter(p => p.docId === productId)[0].productTotal).reduce((a,b) => a + b, 0)
 
-    const totalValue = sales.map(s => parseFloat(s.price)).reduce((a,b) => a + b, 0)
-    const totalNum = data.length
-    this.setState({
-      data,
-      sales,
-      totalNum,
-      totalValue
-
-    });
+    this.setState({totalValue,items});
 
   })
   .catch((err) => {
     console.log('Error getting documents', err);
   });
 
-
-  //listener that updates if a sale is added
-  db.collection("sales")
-  .where("productId", "==", productId)
-  .onSnapshot(snapshot => {
+  ref.onSnapshot(snapshot => {
       let sales = [];
 
       snapshot.forEach(doc => {
 
         const sale = {
           docId:doc.id,
-          productName:doc.data().productName,
-          productId:doc.data().productId,
-          price:doc.data().price,
-          productImg:doc.data().productImg,
-          customer:doc.data().customer,
-          customerId:doc.data().customerId,
-          salesmanId:doc.data().salesmanId,
-          salesman:doc.data().salesman,
-          uid:doc.data().uid
+          ...doc.data()
         }
-
         sales.push(sale)
       });
+      const items = sales.map(i => [i.customer,i.saleProducts.filter(p => p.docId === productId)[0].productTotal, moment(i.saleDate.toDate()).calendar(),i.salesman])
 
-      const data = sales.map(s => [s.customer, s.productName, s.price, s.salesman])
+      const totalValue = sales.map(i => i.saleProducts.filter(p => p.docId === productId)[0].productTotal).reduce((a,b) => a + b, 0)
 
-      const totalValue = sales.map(s => parseFloat(s.price)).reduce((a,b) => a + b, 0)
-      const totalNum = data.length
-      this.setState({
-        data,
-        sales,
-        totalNum,
-        totalValue
-
-      });
+      this.setState({totalValue,items});
     });
 
   }
 
   render(){
-      const { classes } = this.props;
-      const { sales, totalNum, totalValue } = this.state
+      const { totalValue, items } = this.state
 
     return (
       <Card>
         <CardHeader>
           <CardTitle className="text-warning" tag="h4">
-          <i className="nc-icon nc-money-coins text-warning" /> Sales</CardTitle>
+          <i className="nc-icon nc-money-coins text-warning" />Sales</CardTitle>
         </CardHeader>
         <CardBody>
           <Table responsive>
             <thead className="text-warning">
               <tr>
                 <th>Customer</th>
-                <th>Price</th>
+                <th>$</th>
+                <th>Date</th>
                 <th>Salesman</th>
 
               </tr>
             </thead>
             <tbody>
 
-            {sales.map(p =>
+            {items.map((p,i) =>
 
-              <tr>
-                <td>{p.customer}</td>
-                <td>{p.price}</td>
-                <td>{p.salesman}</td>
+              <tr key={i}>
+                <td>{p[0]}</td>
+                <td>${p[1]}</td>
+                <td>{p[2]}</td>
+                <td>{p[3]}</td>
               </tr>
 
             )}
@@ -146,10 +106,13 @@ class ProductSales extends Component {
             </tbody>
           </Table>
         </CardBody>
+        <CardFooter>
+        <hr/>
+        <h5>Total: ${totalValue}</h5>
+        </CardFooter>
       </Card>
     )
+  }
 }
-}
-
 
 export default ProductSales

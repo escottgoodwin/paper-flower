@@ -1,21 +1,3 @@
-/*!
-
-=========================================================
-* Paper Dashboard React - v1.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-
-* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
@@ -71,15 +53,16 @@ class Sidebar extends React.Component {
         data-color={this.props.bgColor}
         data-active-color={this.props.activeColor}
       >
-        <div className="logo">
-
+        <div style={{color:'white'}} className="logo">
+        <center>
             <div className="logo-img">
-              <img src={logo} alt="react-logo" />
+              <img src={logo} width='50' alt="react-logo" />
             </div>
-          
-            Flower Shop
 
+            Flower Shop
+          </center>
         </div>
+
         <div style={{color:'white',textAlign:'center'}} className="logo">
         Welcome {userName}
         </div>

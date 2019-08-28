@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
-// nodejs library to set properties for components
-// @material-ui/core
+import React, { Component } from "react";
+import moment from 'moment'
 
 import {
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
   CardTitle,
@@ -15,79 +13,74 @@ import {
 import fire from '../firebase'
 const db = fire.firestore()
 
-function Sales() {
+class Sales extends Component {
 
-  const [ total, setTotal ] = useState()
-  const [ number, setNumber ] = useState()
-
-  useEffect(() => {
-    const sales = []
-    db.collection('sales').get()
-    .then((snapshot) => {
-      snapshot.forEach((doc) => {
-
-        const sale = {
-          docId:doc.id,
-          productName:doc.data().productName,
-          productId:doc.data().productId,
-          price:doc.data().price,
-          productImg:doc.data().productImg,
-          customer:doc.data().customer,
-          customerId:doc.data().customerId,
-          salesmanId:doc.data().salesmanId,
-          salesman:doc.data().salesman,
-          uid:doc.data().uid
-        }
-
-        sales.push(sale)
-      });
-
-      const saleslist = sales.map(s => parseFloat(s.price))
-
-      const salesSum =  saleslist.reduce((a,b) => a + b, 0)
-
-      setTotal(salesSum)
-      setNumber(sales.length)
-
-    })
-    .catch((err) => {
-      console.log('Error getting documents', err);
-    });
+  state = {
+    total:0,
+    lastSale:null
+  }
 
 
-    //listener that updates if a sale is added
-    db.collection("sales")
-    .onSnapshot(snapshot => {
-        let sales = [];
+    componentDidMount(){
+      const ref = db.collection('sales').orderBy("saleDate", "desc")
 
-        snapshot.forEach(doc => {
+      ref.get()
+      .then((snapshot) => {
+        const sales = []
+        snapshot.forEach((doc) => {
 
           const sale = {
             docId:doc.id,
-            productName:doc.data().productName,
-            productId:doc.data().productId,
-            price:doc.data().price,
-            productImg:doc.data().productImg,
-            customer:doc.data().customer,
-            customerId:doc.data().customerId,
-            salesmanId:doc.data().salesmanId,
-            salesman:doc.data().salesman,
-            uid:doc.data().uid
+            cartTotal:doc.data().cartTotal,
+            saleDate:doc.data().saleDate,
+            customer:doc.data().customer
           }
 
           sales.push(sale)
         });
 
-        const saleslist = sales.map(s => parseFloat(s.price))
+        const saleslist = sales.map(s => parseFloat(s.cartTotal))
 
         const salesSum =  saleslist.reduce((a,b) => a + b, 0)
+        const lastSale = sales[0]
 
-        setTotal(salesSum)
-        setNumber(sales.length)
+        this.setState({lastSale,total:salesSum})
 
+      })
+      .catch((err) => {
+        console.log('Error getting documents', err);
       });
 
-  });
+      ref.get()
+      .then((snapshot) => {
+        const sales = []
+        snapshot.forEach((doc) => {
+
+          const sale = {
+            docId:doc.id,
+            cartTotal:doc.data().cartTotal,
+            saleDate:doc.data().saleDate,
+            customer:doc.data().customer
+          }
+
+          sales.push(sale)
+        });
+
+        const saleslist = sales.map(s => parseFloat(s.cartTotal))
+
+        const salesSum =  saleslist.reduce((a,b) => a + b, 0)
+        const lastSale = sales[0]
+
+        this.setState({lastSale,total:salesSum})
+
+      })
+      .catch((err) => {
+        console.log('Error getting documents', err);
+      });
+    }
+
+render(){
+    const { total, lastSale } = this.state
 
     return (
       <>
@@ -110,13 +103,24 @@ function Sales() {
         </CardBody>
         <CardFooter>
           <hr />
+          {lastSale!==null &&
           <div className="stats">
-            Number of Sales: {number}
+            <div>
+            Last Sale:
+            </div>
+            <div>
+             {lastSale.customer}  ${lastSale.cartTotal}
+             </div>
+             <div>
+             {moment(lastSale.saleDate.toDate()).calendar()}
+             </div>
           </div>
+          }
         </CardFooter>
       </Card>
       </>
 )
+}
 }
 
 

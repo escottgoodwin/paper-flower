@@ -1,47 +1,24 @@
-/*!
-
-=========================================================
-* Paper Dashboard React - v1.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-
-* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-import React from "react";
+import React, { Component } from "react";
 // react plugin used to create google maps
 import fire from '../firebase'
-import { Calendar, Views, momentLocalizer } from 'react-big-calendar'
+import { Calendar, momentLocalizer } from 'react-big-calendar'
 
 // reactstrap components
-import { Card, CardHeader, CardBody, Row, Col, Modal, ModalFooter, ModalHeader, Button, ModalBody,FormGroup,
-Form,
+import { Card, CardBody, Row, Col, Modal, ModalFooter, ModalHeader, Button, ModalBody,FormGroup,
 Input } from "reactstrap";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from 'moment'
 
-// Setup the localizer by providing the moment (or globalize) Object
-// to the correct localizer.
 const localizer = momentLocalizer(moment)
-
-const mapStyles = {
-  width: '100%',
-  height: '100%',
-};
 
 const db = fire.firestore()
 
-class DashboardCalendar extends React.Component {
+function addMinutes(date, minutes) {
+  return new Date(date.getTime() + minutes*60000);
+}
+
+class DashboardCalendar extends Component {
 
   state = {
     events:[],
@@ -49,11 +26,13 @@ class DashboardCalendar extends React.Component {
     modalTitle:'',
     modalText:'',
     modalId:'',
-    addEventModal:'',
+    modalType:'',
+    addEventModal:false,
     addEventTitle:'',
     addEventStart:null,
     addEventEnd:null,
-    addEventDescription:''
+    addEventDescription:'',
+    sales:[]
   };
 
   toggle = (event) => {
@@ -62,7 +41,8 @@ class DashboardCalendar extends React.Component {
       modal: !prevState.modal,
       modalTitle:event.title,
       modalDescription:event.description,
-      modalId:event.id
+      modalId:event.id,
+      modaltype:event.type
     }));
   }
 
@@ -78,7 +58,8 @@ class DashboardCalendar extends React.Component {
     title:addEventTitle,
     description:addEventDescription,
     startTime:addEventStart,
-    endTime:addEventEnd
+    endTime:addEventEnd,
+    type:'meeting'
     })
     .then(function(docRef) {
         console.log("Document written with ID: ", docRef.id);
@@ -103,7 +84,6 @@ class DashboardCalendar extends React.Component {
       addEventStart:start,
       addEventEnd:end,
     }));
-    const { addEventStart, addEventEnd} = this.state
 
    }
 
@@ -121,9 +101,11 @@ class DashboardCalendar extends React.Component {
 
   componentDidMount(){
 
-  const events = []
-  db.collection('events').get()
+  const ref = db.collection('events')
+
+  ref.get()
   .then((snapshot) => {
+    const events = []
     snapshot.forEach((doc) => {
 
       const event = {
@@ -131,7 +113,9 @@ class DashboardCalendar extends React.Component {
         title:doc.data().title,
         description:doc.data().description,
         start:doc.data().startTime.toDate(),
-        end:doc.data().endTime.toDate()
+        end:doc.data().endTime.toDate(),
+        color:'blue',
+        type:'meeting'
       }
       events.push(event)
     })
@@ -139,8 +123,7 @@ class DashboardCalendar extends React.Component {
       this.setState({events})
   })
 
-    db.collection('events')
-    .onSnapshot(snapshot => {
+    ref.onSnapshot(snapshot => {
       let events = [];
 
       snapshot.forEach(doc => {
@@ -149,21 +132,63 @@ class DashboardCalendar extends React.Component {
           title:doc.data().title,
           description:doc.data().description,
           start:doc.data().startTime.toDate(),
-          end:doc.data().endTime.toDate()
+          end:doc.data().endTime.toDate(),
+          color:'blue',
+          type:'meeting'
         }
         events.push(event)
-      });
-
+      })
       this.setState({events})
+    })
 
-    });
+    const ref2 = db.collection('sales')
 
+    ref2.get()
+    .then((snapshot) => {
+      const sales = []
+      snapshot.forEach((doc) => {
+
+        const sale = {
+          id:doc.id,
+          title: 'Sale - ' + doc.data().customer,
+          description:doc.data().customer + ' $' + doc.data().cartTotal,
+          start:doc.data().saleDate.toDate(),
+          end:addMinutes(doc.data().saleDate.toDate(),90),
+          color:'green',
+          type:'sale'
+        }
+        sales.push(sale)
+      })
+
+        this.setState({sales})
+    })
+
+      ref2.onSnapshot(snapshot => {
+        let sales = [];
+
+        snapshot.forEach(doc => {
+          const sale = {
+            id:doc.id,
+            title: 'Sale - ' + doc.data().customer,
+            description:doc.data().customer + ' $' + doc.data().cartTotal,
+            start:doc.data().saleDate.toDate(),
+            end:addMinutes(doc.data().saleDate.toDate(),90),
+            color:'green',
+            type:'sale'
+          }
+          sales.push(sale)
+        })
+
+        this.setState({sales})
+
+      })
 
   }
 
   render() {
 
-  const { events, modalTitle, modalDescription, modal, modalId, addEventModal, addEventTitle, addEventDescription, addEventStart, addEventEnd } = this.state
+  const { events, sales, modalTitle, modalDescription, modal, modalId, modaltype, addEventModal, addEventTitle, addEventDescription, addEventStart, addEventEnd } = this.state
+  const masterevents = [...events, ...sales]
 
     return (
       <div style={{marginTop:100,marginLeft:20,marginRight:20}}>
@@ -174,24 +199,26 @@ class DashboardCalendar extends React.Component {
               <Card>
 
                 <CardBody>
-                  <div
+                  <div style={{ paddingBottom:50, position: "relative", overflow: "hidden" }}>
 
-                    style={{ paddingBottom:50, position: "relative", overflow: "hidden" }}
-                  >
-
-                <Calendar
-                  selectable
-                  localizer={localizer}
-                  views={['month', 'day', 'week','agenda']}
-                  events={this.state.events}
-                  defaultView='month'
-                  scrollToTime={new Date(1970, 1, 1, 6)}
-                  defaultDate={new Date()}
-                  onSelectEvent={event => this.toggle(event)}
-                  onSelectSlot={this.handleSelect}
-                  resizable
-                  style={{ height: "100vh" }}
-                />
+                  <Calendar
+                    selectable
+                    localizer={localizer}
+                    views={['month', 'day', 'week','agenda']}
+                    events={masterevents}
+                    defaultView='month'
+                    scrollToTime={new Date(1970, 1, 1, 6)}
+                    defaultDate={new Date()}
+                    onSelectEvent={event => this.toggle(event)}
+                    onSelectSlot={this.handleSelect}
+                    resizable
+                    style={{ height: "100vh" }}
+                    eventPropGetter={event => ({
+                      style: {
+                        backgroundColor: event.color,
+                      },
+                    })}
+                  />
 
                 </div>
                 </CardBody>
@@ -205,7 +232,7 @@ class DashboardCalendar extends React.Component {
                     {modalDescription}
                   </ModalBody>
                   <ModalFooter>
-                    <Button color="danger" onClick={() => this.deleteEvent(modalId)}>Delete</Button>{' '}
+                    {modaltype!=='sale' && <Button color="danger" onClick={() => this.deleteEvent(modalId)}>Delete</Button>} {' '}
                     <Button color="secondary" onClick={this.toggle}>Cancel</Button>
                   </ModalFooter>
                 </Modal>
@@ -251,7 +278,7 @@ class DashboardCalendar extends React.Component {
                   </ModalFooter>
                 </Modal>
                 </div>
-    );
+    )
   }
 }
 

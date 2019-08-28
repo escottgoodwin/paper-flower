@@ -1,23 +1,10 @@
 import React from "react";
-// react plugin used to create charts
-import { Line, Pie, Bar } from "react-chartjs-2";
-// reactstrap components
+
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardTitle,
   Row,
   Col,
   Container
 } from "reactstrap";
-// core components
-import {
-  dashboard24HoursPerformanceChart,
-  dashboardEmailStatisticsChart,
-  dashboardNASDAQChart
-} from "variables/charts.jsx";
 
 import Inventory from '../components/Inventory'
 import Sales from '../components/Sales'
@@ -30,13 +17,11 @@ import InventoryBarChart from '../components/InventoryBarChart'
 import CustomerList from '../components/CustomerList'
 import SalesPeopleList from '../components/SalesPeopleList'
 
-function Dashboard() {
+const Dashboard = () =>
 
-    return (
-      <>
         <div className="content">
         <Container >
-          <Row fluid>
+          <Row fluid='true'>
             <Col lg="3" md="6" sm="6">
 
             <Inventory />
@@ -97,9 +82,5 @@ function Dashboard() {
           </Row>
         </Container>
         </div>
-      </>
-    );
-
-}
 
 export default Dashboard;
