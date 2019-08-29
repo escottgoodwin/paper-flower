@@ -22,11 +22,12 @@ class Sales extends Component {
 
 
     componentDidMount(){
+
       const ref = db.collection('sales').orderBy("saleDate", "desc")
 
       ref.get()
       .then((snapshot) => {
-        const sales = []
+        let sales = []
         snapshot.forEach((doc) => {
 
           const sale = {
@@ -49,34 +50,32 @@ class Sales extends Component {
       })
       .catch((err) => {
         console.log('Error getting documents', err);
-      });
-
-      ref.get()
-      .then((snapshot) => {
-        const sales = []
-        snapshot.forEach((doc) => {
-
-          const sale = {
-            docId:doc.id,
-            cartTotal:doc.data().cartTotal,
-            saleDate:doc.data().saleDate,
-            customer:doc.data().customer
-          }
-
-          sales.push(sale)
-        });
-
-        const saleslist = sales.map(s => parseFloat(s.cartTotal))
-
-        const salesSum =  saleslist.reduce((a,b) => a + b, 0)
-        const lastSale = sales[0]
-
-        this.setState({lastSale,total:salesSum})
-
       })
-      .catch((err) => {
-        console.log('Error getting documents', err);
-      });
+
+
+      ref.onSnapshot(snapshot => {
+          let sales = []
+
+          snapshot.forEach(doc => {
+
+            const sale = {
+              docId:doc.id,
+              cartTotal:doc.data().cartTotal,
+              saleDate:doc.data().saleDate,
+              customer:doc.data().customer
+            }
+
+            sales.push(sale)
+          })
+
+          const saleslist = sales.map(s => parseFloat(s.cartTotal))
+
+          const salesSum =  saleslist.reduce((a,b) => a + b, 0)
+          const lastSale = sales[0]
+
+          this.setState({lastSale,total:salesSum})
+
+        })
     }
 
 render(){
