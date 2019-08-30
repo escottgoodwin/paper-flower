@@ -6,8 +6,6 @@ import PerfectScrollbar from "perfect-scrollbar";
 
 import logo from "assets/img/flower_2.png";
 
-import firebase from 'firebase/app';
-
 var ps;
 
 class Sidebar extends React.Component {
@@ -18,20 +16,13 @@ class Sidebar extends React.Component {
   }
 
   state={
-    userName:''
+    user:''
   }
   // verifies if routeName is the one active (in browser input)
   activeRoute(routeName) {
     return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
   }
   componentDidMount() {
-    var user = firebase.auth().currentUser;
-
-    if (user != null) {
-      this.setState({userName:user.displayName})
-    } else {
-      // No user is signed in.
-    }
 
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.sidebar.current, {
@@ -46,7 +37,7 @@ class Sidebar extends React.Component {
     }
   }
   render() {
-    const { userName } = this.state
+    const { userName } = this.props
     return (
       <div
         className="sidebar"
@@ -58,7 +49,6 @@ class Sidebar extends React.Component {
             <div className="logo-img">
               <img src={logo} width='50' alt="react-logo" />
             </div>
-
             Flower Shop
           </center>
         </div>

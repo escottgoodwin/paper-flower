@@ -4,8 +4,20 @@ import fire from '../firebase'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 
 // reactstrap components
-import { Card, CardBody, Row, Col, Modal, ModalFooter, ModalHeader, Button, ModalBody,FormGroup,
-Input } from "reactstrap";
+import { Card,
+  CardBody,
+  Row,
+  Col,
+  Modal,
+  ModalFooter,
+  ModalHeader,
+  Button,
+  ButtonGroup,
+  ModalBody,
+  FormGroup,
+  Input
+} from "reactstrap"
+
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from 'moment'
@@ -16,6 +28,14 @@ const db = fire.firestore()
 
 function addMinutes(date, minutes) {
   return new Date(date.getTime() + minutes*60000);
+}
+
+const filterEvents=(events,eventType)=> {
+  if (eventType==='all'){
+    return events
+  } else {
+   return events.filter(e => e.type===eventType)
+ }
 }
 
 class DashboardCalendar extends Component {
@@ -32,7 +52,8 @@ class DashboardCalendar extends Component {
     addEventStart:null,
     addEventEnd:null,
     addEventDescription:'',
-    sales:[]
+    sales:[],
+    eventType:'all'
   };
 
   toggle = (event) => {
@@ -187,9 +208,10 @@ class DashboardCalendar extends Component {
 
   render() {
 
-  const { events, sales, modalTitle, modalDescription, modal, modalId, modaltype, addEventModal, addEventTitle, addEventDescription, addEventStart, addEventEnd } = this.state
+  const { events, sales, modalTitle, modalDescription, modal, modalId, modaltype, addEventModal, addEventTitle, addEventDescription, addEventStart, addEventEnd, eventType } = this.state
   const masterevents = [...events, ...sales]
-
+  const filteredEvents = filterEvents(masterevents,eventType)
+  console.log(filteredEvents)
     return (
       <div style={{marginTop:100,marginLeft:20,marginRight:20}}>
 
@@ -200,12 +222,18 @@ class DashboardCalendar extends Component {
 
                 <CardBody>
                   <div style={{ paddingBottom:50, position: "relative", overflow: "hidden" }}>
-
+                  <center>
+                  <ButtonGroup>
+                    <Button onClick={() => this.setState({eventType:'all'})}>All</Button>
+                    <Button onClick={() => this.setState({eventType:'meeting'})}>Meetings</Button>
+                    <Button onClick={() => this.setState({eventType:'sale'})}>Sales</Button>
+                  </ButtonGroup>
+                  </center>
                   <Calendar
                     selectable
                     localizer={localizer}
                     views={['month', 'day', 'week','agenda']}
-                    events={masterevents}
+                    events={filteredEvents}
                     defaultView='month'
                     scrollToTime={new Date(1970, 1, 1, 6)}
                     defaultDate={new Date()}

@@ -15,20 +15,42 @@ import {
   Input,
   Row,
   Col,
-  Alert
+  Alert,
+  Toast
 } from "reactstrap";
 
 import fire from '../firebase'
 
 import logo from "assets/img/flower_2.png";
 import bkgd from "assets/img/flower-field-3.jpg";
-
+const database = fire.firestore()
 
 var google = new firebase.auth.GoogleAuthProvider();
 
 var facebook = new firebase.auth.FacebookAuthProvider();
 
 var twitter = new firebase.auth.TwitterAuthProvider();
+
+const getUser = (uid) => {
+  database.collection('users')
+      .where("uid", "==", uid)
+      .get()
+      .then(function(querySnapshot) {
+          const user = []
+          querySnapshot.forEach(function(doc) {
+              user.push(doc.data())
+          })
+          return user[0]
+        })
+        .catch(function(error) {
+          Toast.show({
+                 text: "No user for this email.",
+                 buttonText: 'X',
+                 type: "danger"
+               })
+      })
+
+}
 
 class Login extends Component {
 
@@ -88,17 +110,14 @@ class Login extends Component {
 
     firebase.auth().signInWithEmailAndPassword(email, password)
     .then(function(result) {
-    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-    console.log(result)
-    props.history.push(`/admin/dashboard`)
-
-    // ...
+        const user = getUser(result.user.uid)
+        localStorage.setItem('user', JSON.stringify(user));
+        console.log(result)
+        props.history.push(`/admin/dashboard`)
     }).catch((error) => {
     // Handle Errors here.
-    var errorMessage = error.message;
-
-    this.setState({errorMessage,showError:true})
-    // ...
+        var errorMessage = error.message;
+        this.setState({errorMessage,showError:true})
     });
 
   }

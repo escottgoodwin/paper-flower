@@ -8,10 +8,6 @@ import {
   Nav,
   NavItem,
   Container,
-  InputGroup,
-  InputGroupText,
-  InputGroupAddon,
-  Input,
 } from "reactstrap";
 
 import routes from "routes.js";
@@ -142,21 +138,11 @@ class Header extends React.Component {
             navbar
             className="justify-content-end"
           >
-            <form>
-              <InputGroup className="no-border">
-                <Input placeholder="Search..." />
-                <InputGroupAddon addonType="append">
-                  <InputGroupText>
-                    <i className="nc-icon nc-zoom-split" />
-                  </InputGroupText>
-                </InputGroupAddon>
-              </InputGroup>
-            </form>
+
             <Nav navbar>
 
               <NavItem>
-                <Link to="#pablo" className="nav-link btn-rotate">
-
+                <Link className="nav-link btn-rotate">
                   <div onClick={this.signOut}>Logout</div>
                 </Link>
               </NavItem>

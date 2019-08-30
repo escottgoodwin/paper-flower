@@ -77,6 +77,7 @@ class Dashboard extends React.Component {
     return (
       <div className="wrapper">
         <Sidebar
+          userName={this.state.userName}
           {...this.props}
           routes={routes}
           bgColor={this.state.backgroundColor}
