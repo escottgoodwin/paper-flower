@@ -1,6 +1,7 @@
 import React,{Component} from "react";
 import firebase from 'firebase/app';
 import 'firebase/auth'
+import axios from 'axios'
 // nodejs library to set properties for components
 import { FaFacebook, FaGooglePlusSquare, FaTwitterSquare } from 'react-icons/fa';
 // @material-ui/core components
@@ -22,7 +23,8 @@ import {
 import fire from '../firebase'
 
 import logo from "assets/img/flower_2.png";
-import bkgd from "assets/img/flower-field-3.jpg";
+import bkgd from "assets/img/loginmap1.jpg";
+import { LOGIN_MUTATION } from '../ApolloQueries'
 const database = fire.firestore()
 
 var google = new firebase.auth.GoogleAuthProvider();
@@ -31,26 +33,25 @@ var facebook = new firebase.auth.FacebookAuthProvider();
 
 var twitter = new firebase.auth.TwitterAuthProvider();
 
-const getUser = (uid) => {
-  database.collection('users')
-      .where("uid", "==", uid)
-      .get()
-      .then(function(querySnapshot) {
-          const user = []
-          querySnapshot.forEach(function(doc) {
-              user.push(doc.data())
-          })
-          return user[0]
-        })
-        .catch(function(error) {
-          Toast.show({
-                 text: "No user for this email.",
-                 buttonText: 'X',
-                 type: "danger"
-               })
-      })
+
+const processLogin = (uid,props) => {
+  localStorage.setItem('uid',uid)
+  axios({
+    // Of course the url should be where your actual GraphQL server is.
+    url: process.env.REACT_APP_GRAPHQL_SERVER,
+    method: 'post',
+    data: {
+        query: LOGIN_MUTATION,
+        variables: { uid }
+    }
+  }).then((result) => {
+      console.log(result.data)
+      localStorage.setItem('auth_token',result.data.data.login.token)
+      props.history.push(`/admin/dashboard`)
+  })
 
 }
+
 
 class Login extends Component {
 
@@ -66,43 +67,32 @@ class Login extends Component {
   googleSignIn = (props) => {
 
     fire.auth().signInWithPopup(google).then(function(result) {
-  // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-
-  props.history.push(`/admin/dashboard`)
-
-  // ...
-}).catch((error) => {
-  // Handle Errors here.
-  var errorMessage = error.message;
-  this.setState({errorMessage,showError:true})
-
-});
-
+      processLogin(result.user.uid,props)
+    }).catch((error) => {
+      var errorMessage = error.message;
+      this.setState({errorMessage,showError:true})
+    })
   }
 
   facebookSignIn = (props) => {
+
     fire.auth().signInWithPopup(facebook).then(function(result) {
-  // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-
-  props.history.push(`/admin/dashboard`)
-
-  // ...
-}).catch((error) => {
-  // Handle Errors here.
-  var errorMessage = error.message;
-  this.setState({errorMessage,showError:true})
-  // ...
-});
+      processLogin(result.user.uid,props)
+    }).catch((error) => {
+      var errorMessage = error.message;
+      this.setState({errorMessage,showError:true})
+    })
 
   }
 
   twitterSignIn = (props) => {
+
     fire.auth().signInWithPopup(twitter).then(function(result) {
-      props.history.push(`/admin/dashboard`)
+      processLogin(result.user.uid,props)
     }).catch((error) => {
       var errorMessage = error.message;
       this.setState({errorMessage,showError:true})
-    });
+    })
   }
 
   emailSignIn = (props) => {
@@ -110,19 +100,14 @@ class Login extends Component {
 
     firebase.auth().signInWithEmailAndPassword(email, password)
     .then(function(result) {
-        const user = getUser(result.user.uid)
-        localStorage.setItem('user', JSON.stringify(user));
-        console.log(result)
-        props.history.push(`/admin/dashboard`)
+      processLogin(result.user.uid,props)
     }).catch((error) => {
-    // Handle Errors here.
-        var errorMessage = error.message;
-        this.setState({errorMessage,showError:true})
-    });
-
+      var errorMessage = error.message;
+      this.setState({errorMessage,showError:true})
+    })
   }
 
-onDismiss = () => this.setState({showError:false})
+  onDismiss = () => this.setState({showError:false})
 
   render(){
       const { showError, errorMessage } = this.state
@@ -143,7 +128,7 @@ onDismiss = () => this.setState({showError:false})
     <Card className="card-stats">
     <CardHeader>
       <div>
-        <img src={logo} alt='logo' width="50" height="50"/>
+        <h5>Langa Learn</h5>
       </div>
       <div>
         <h3>Login</h3>
@@ -153,13 +138,13 @@ onDismiss = () => this.setState({showError:false})
 
         <Row>
           <Col  md="4">
-             <FaGooglePlusSquare size={32} />
+             <FaGooglePlusSquare onClick={() => this.googleSignIn(this.props)} size={32} />
           </Col>
           <Col  md="4">
-            <FaTwitterSquare size={32}/>
+            <FaTwitterSquare onClick={() => this.twitterSignIn(this.props)} size={32}/>
           </Col>
           <Col  md="4">
-            <FaFacebook size={32} />
+            <FaFacebook onClick={() => this.facebookSignIn(this.props)} size={32} />
           </Col>
         </Row>
         <div style={{margin:50}}>

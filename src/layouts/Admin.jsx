@@ -6,15 +6,6 @@ import { Route, Switch } from "react-router-dom";
 import DemoNavbar from "components/Navbars/DemoNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import Sidebar from "components/Sidebar/Sidebar.jsx";
-import Customer from "views/Customer";
-import CustomerUpdate from "views/CustomerUpdate";
-import CustomerAdd from "views/CustomerAdd";
-import SalesPerson from "views/SalesPerson";
-import SalesPersonUpdate from "views/SalesPersonUpdate";
-import SalesPersonAdd from "views/SalesPersonAdd";
-import Product from "views/Product";
-import ProductUpdate from "views/ProductUpdate";
-import ProductAdd from "views/ProductAdd";
 
 import fire from '../firebase'
 
@@ -96,59 +87,7 @@ class Dashboard extends React.Component {
               );
             })}
 
-            <Route
-              path='/admin/customer_profile'
-              component={Customer}
-              name='Customer'
-            />
-
-            <Route
-              path='/admin/customer_update'
-              component={CustomerUpdate}
-              name='Update Customer'
-            />
-
-            <Route
-              path='/admin/customer_add'
-              component={CustomerAdd}
-              name='Add Customer'
-            />
-
-            <Route
-              path='/admin/salesman_profile'
-              component={SalesPerson}
-              name='Sales Person'
-            />
-
-            <Route
-              path='/admin/salesperson_update'
-              component={SalesPersonUpdate}
-              name='Sales Person Update'
-            />
-
-            <Route
-              path='/admin/salesperson_add'
-              component={SalesPersonAdd}
-              name='Sales Person Add'
-            />
-
-            <Route
-              path='/admin/product_profile'
-              component={Product}
-              name='Product'
-            />
-
-            <Route
-              path='/admin/product_update'
-              component={ProductUpdate}
-              name='Product Update'
-            />
-
-            <Route
-              path='/admin/product_add'
-              component={ProductAdd}
-              name='Add Product'
-            />
+        
 
           </Switch>
           <Footer fluid />

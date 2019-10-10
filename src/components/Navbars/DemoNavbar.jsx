@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import {
   Collapse,
   Navbar,
@@ -8,11 +7,16 @@ import {
   Nav,
   NavItem,
   Container,
+  Button
 } from "reactstrap";
+
+import axios from 'axios'
 
 import routes from "routes.js";
 
 import firebase from 'firebase'
+
+import { LOGOUT_MUTATION } from '../../ApolloQueries'
 
 class Header extends React.Component {
   constructor(props) {
@@ -62,12 +66,29 @@ class Header extends React.Component {
 
   signOut = (props) => {
     firebase.auth().signOut().then(function() {
-
-      console.log('signed out')
+      
 
     }).catch(function(error) {
       console.log(error)
-    });
+    })
+  
+    const uid = localStorage.getItem('uid')
+    
+      axios({
+        // Of course the url should be where your actual GraphQL server is.
+        url: process.env.REACT_APP_GRAPHQL_SERVER,
+        method: 'post',
+        data: {
+            query: LOGOUT_MUTATION,
+            variables: { uid }
+        }
+      }).then((result) => {
+          console.log('signed out')
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
+
     this.props.history.push(`/login`)
   }
   // function that adds color dark/transparent to the navbar on resize (this is for the collapse)
@@ -142,9 +163,9 @@ class Header extends React.Component {
             <Nav navbar>
 
               <NavItem>
-                <Link className="nav-link btn-rotate">
-                  <div onClick={this.signOut}>Logout</div>
-                </Link>
+                <div className="nav-link btn-rotate">
+                  <Button onClick={this.signOut}>Logout</Button>
+                </div>
               </NavItem>
             </Nav>
           </Collapse>

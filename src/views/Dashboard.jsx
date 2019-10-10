@@ -6,81 +6,36 @@ import {
   Container
 } from "reactstrap";
 
-import Inventory from '../components/Inventory'
-import Sales from '../components/Sales'
-import Salesmen from '../components/Salesmen'
-import Customers from '../components/Customers'
-import SalesBarChart from '../components/SalesBarChart'
-import SalesPieChart from '../components/SalesPieChart'
-import InventoryPieChart from '../components/InventoryPieChart'
-import InventoryBarChart from '../components/InventoryBarChart'
-import CustomerList from '../components/CustomerList'
-import SalesPeopleList from '../components/SalesPeopleList'
-
-const Dashboard = () =>
+function Dashboard(){
+  
+  return(
 
         <div className="content">
         <Container >
           <Row fluid='true'>
-            <Col lg="3" md="6" sm="6">
+          <Col lg="3" md="6" sm="3">
 
-            <Inventory />
+            French 
+          
 
             </Col>
-            <Col lg="3" md="6" sm="6">
-              <Sales />
+            <Col lg="3" md="6" sm="3">
+              German
+            </Col>
+            <Col lg="3" md="3" sm="3" >
+
+              English
+
             </Col>
             <Col lg="3" md="6" sm="6" >
-
-              <Salesmen />
-
-            </Col>
-            <Col lg="3" md="6" sm="6" >
-              <Customers />
+              French
             </Col>
           </Row>
-          <Row>
-            <Col md="6">
-
-              <SalesBarChart />
-
-            </Col>
-
-            <Col md="6">
-
-            <SalesPieChart />
-
-            </Col>
-          </Row>
-
-          <Row>
-            <Col md="6">
-
-              <InventoryBarChart />
-
-            </Col>
-
-            <Col md="6">
-
-            <InventoryPieChart />
-
-            </Col>
-          </Row>
-
-          <Row>
-            <Col md="12">
-
-              <SalesPeopleList />
-
-            </Col>
-
-            <Col md="12">
-
-            <CustomerList />
-
-            </Col>
-          </Row>
+          
         </Container>
         </div>
+   )
+  }
+  
 
 export default Dashboard;

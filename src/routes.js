@@ -1,8 +1,6 @@
 import Dashboard from "views/Dashboard.jsx";
-import ProductList from "views/Products";
-import SalesList from "views/Sales";
-import Map from "views/Map2";
-import DashboardCalendar from "views/Calendar";
+import LinkRecs from "views/LinkRecs";
+
 
 var routes = [
   {
@@ -13,32 +11,11 @@ var routes = [
     layout: "/admin"
   },
   {
-    path: "/products",
-    name: "Products",
-    icon: "nc-icon nc-paper",
-    component: ProductList,
+    path: "/link_recs",
+    name: "Link Recommendations",
+    icon: "nc-icon nc-bank",
+    component: LinkRecs,
     layout: "/admin"
   },
-  {
-    path: "/sales",
-    name: "Sales",
-    icon: "nc-icon nc-money-coins",
-    component: SalesList,
-    layout: "/admin"
-  },
-  {
-    path: "/maps",
-    name: "Maps",
-    icon: "nc-icon nc-pin-3",
-    component: Map,
-    layout: "/admin"
-  },
-  {
-    path: "/calendar",
-    name: "Calendar",
-    icon: "nc-icon nc-calendar-60",
-    component: DashboardCalendar,
-    layout: "/admin"
-  }
 ];
 export default routes;

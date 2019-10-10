@@ -1,45 +1,51 @@
-/*!
+import React from 'react'
+import ReactDOM from 'react-dom'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http'
+import { setContext } from 'apollo-link-context'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import { ApolloProvider } from 'react-apollo'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-=========================================================
-* Paper Dashboard React - v1.1.0
-=========================================================
+import { typeDefs, resolvers } from './resolvers';
+import App from './App'
 
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
+const httpLink = createHttpLink({uri: process.env.REACT_APP_GRAPHQL_SERVER})
 
-* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/master/LICENSE.md)
+const authLink = setContext( async (_, { headers }) => {
+  const token = localStorage.getItem('auth_token')
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  }
+})
 
-* Coded by Creative Tim
+const link = authLink.concat(httpLink)
+const cache = new InMemoryCache()
 
-=========================================================
+const client = new ApolloClient({
+  link,
+  cache,
+  typeDefs,
+  resolvers
+})
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-import React from "react";
-import ReactDOM from "react-dom";
-import { createBrowserHistory } from "history";
-import { Router, Route, Switch, Redirect } from "react-router-dom";
-
-import "bootstrap/dist/css/bootstrap.css";
-import "assets/scss/paper-dashboard.scss?v=1.1.0";
-import "assets/demo/demo.css";
-import "perfect-scrollbar/css/perfect-scrollbar.css";
-
-import AdminLayout from "layouts/Admin.jsx";
-import Login from "views/Login";
-
-const hist = createBrowserHistory();
+cache.writeData({
+  data: {
+    recTitle: '',
+    recLink:'',
+    langt:'',
+    recommendations:[]
+  },
+})
 
 ReactDOM.render(
-  <Router history={hist}>
-    <Switch>
-      <Route path="/admin" render={props => <AdminLayout {...props} />} />
-      <Route path="/login" component={Login} />
-      <Route path="/" component={Login} />
-
-      <Redirect to="/login" />
-    </Switch>
-  </Router>,
-  document.getElementById("root")
-);
+  <Router>
+    <ApolloProvider client={client}>
+      <Route path="/" component={App} />
+    </ApolloProvider>
+  </Router>
+, document.getElementById('root'))
