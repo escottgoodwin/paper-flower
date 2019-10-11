@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const typeDefs = gql`
-    extend type Query {
+    type Query {
         linkRecommendations: ArticleRecommendations!
         }
 
@@ -21,5 +21,3 @@ export const typeDefs = gql`
         recommendations: [ArticleRecommendation!]!
         }
     `
-
-export const resolvers = {};

@@ -1,6 +1,5 @@
-import Dashboard from "views/Dashboard.jsx";
+import Dashboard from "views/Dashboard";
 import LinkRecs from "views/LinkRecs";
-
 
 var routes = [
   {

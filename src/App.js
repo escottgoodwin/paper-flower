@@ -6,7 +6,7 @@ import "assets/scss/paper-dashboard.scss?v=1.1.0";
 import "assets/demo/demo.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
-import AdminLayout from "layouts/Admin.jsx";
+import AdminLayout from "layouts/Admin";
 import Login from "views/Login";
 
 const App = () => 

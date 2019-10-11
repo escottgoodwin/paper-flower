@@ -11,6 +11,8 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { typeDefs, resolvers } from './resolvers';
 import App from './App'
 
+import { LINK_RECS_QUERY } from './ApolloQueries'
+
 const httpLink = createHttpLink({uri: process.env.REACT_APP_GRAPHQL_SERVER})
 
 const authLink = setContext( async (_, { headers }) => {
@@ -29,16 +31,17 @@ const cache = new InMemoryCache()
 const client = new ApolloClient({
   link,
   cache,
-  typeDefs,
-  resolvers
+  typeDefs
 })
 
 cache.writeData({
   data: {
-    recTitle: '',
-    recLink:'',
-    langt:'',
-    recommendations:[]
+    linkRecommendations:{
+      recTitle: '',
+      recLink:'',
+      langt:'',
+      recommendations:[]
+    }
   },
 })
 

@@ -10,6 +10,7 @@ import Sidebar from "components/Sidebar/Sidebar.jsx";
 import fire from '../firebase'
 
 import routes from "routes.js";
+import Article from "../views/Article";
 
 var ps;
 
@@ -87,7 +88,11 @@ class Dashboard extends React.Component {
               );
             })}
 
-        
+            <Route
+              path='/admin/article'
+              component={Article}
+              name='Article'
+            />
 
           </Switch>
           <Footer fluid />

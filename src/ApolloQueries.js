@@ -33,6 +33,7 @@ export const SINGLE_LINK_MUTATION = gql`
     link
     langt
     recommendations{
+      art_id
       title
       link
       date
@@ -42,16 +43,17 @@ export const SINGLE_LINK_MUTATION = gql`
   `
 
 
-export const LINK_RECS_QUERY = gql`
-query {
-  linkRecommendations @client{
+export const ARTICLE_QUERY = gql`
+query Article($artId:String!, $lang:String!){
+  article(artId:$artId,lang:$lang){
+    art_id
+    article
     title
     link
-    langt
-    recommendations{
-      title
-      langt
-      date
+    date
+    translations{
+      orig_text
+      trans_text
     }
   }
 }

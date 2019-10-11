@@ -4,7 +4,6 @@ import { Nav } from "reactstrap";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
 
-import logo from "assets/img/flower_2.png";
 
 var ps;
 
@@ -46,10 +45,7 @@ class Sidebar extends React.Component {
       >
         <div style={{color:'white'}} className="logo">
         <center>
-            <div className="logo-img">
-              <img src={logo} width='50' alt="react-logo" />
-            </div>
-            Flower Shop
+            Langa Learn
           </center>
         </div>
 
