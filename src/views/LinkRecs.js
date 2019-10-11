@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 
 import { Mutation } from "react-apollo"
-import { SINGLE_LINK_MUTATION } from '../ApolloQueries'
+import { LINK_RECS_QUERY, SINGLE_LINK_MUTATION } from '../ApolloQueries'
 
 import LinkRecs1 from '../components/LinkRecs'
 import { FaRegCaretSquareUp } from "react-icons/fa";
@@ -63,20 +63,28 @@ class LinkRecs extends Component{
             
         </Row>
 
-
         <Row>
-          <Col lg="12" md="12" sm="12">
+          <Col md="12">
 
             <Mutation
-            mutation={SINGLE_LINK_MUTATION}
-            variables={{ link, transLang }}
-            onCompleted={data => this._confirm(data)}
-            onError={error => this._error (error)}
-          >
+              mutation={SINGLE_LINK_MUTATION}
+              variables={{ link, transLang }}
+              onCompleted={data => this._confirm(data)}
+              onError={error => this._error (error)}
+              update={(cache, { data: { singleLinkRecommendations } }) => {
+                cache.writeQuery({
+                  query: LINK_RECS_QUERY,
+                  data: { 
+                    linkRecommendations: singleLinkRecommendations
+                  },
+                })
+              }
+            }
+            >
             {mutation => (
 
               <Button onClick={mutation} variant="primary" outline >
-                Login
+                Submit
               </Button>
 
               )}
@@ -88,17 +96,16 @@ class LinkRecs extends Component{
 
           </Col>
         </Row>
-        {recresp.recommendations.length>0 &&
-        <LinkRecs1 lang={transLang} {...recresp}/>
-        }
-          
+       
+        <LinkRecs1 lang={transLang} />
+        
         </Container>
         </div>
     )
   }
 
   _confirm = async data => {
-    console.log(data)
+    
     const recresp = data.singleLinkRecommendations
     this.setState({recresp})
   }

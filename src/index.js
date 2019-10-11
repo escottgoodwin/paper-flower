@@ -31,16 +31,25 @@ const cache = new InMemoryCache()
 const client = new ApolloClient({
   link,
   cache,
-  typeDefs
+  typeDefs,
+  resolvers: {
+    Query: {
+      linkRecommendations: (recs, _args, { cache }) => {
+        const { newrecs } = cache.readQuery({ query: LINK_RECS_QUERY });
+        return newrecs
+      },
+    },
+  }
 })
 
 cache.writeData({
   data: {
     linkRecommendations:{
-      recTitle: '',
-      recLink:'',
+      title: '',
+      link:'',
       langt:'',
-      recommendations:[]
+      recommendations:[],
+      __typename: 'ArticleRecommendations',
     }
   },
 })

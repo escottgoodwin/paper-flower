@@ -59,3 +59,18 @@ query Article($artId:String!, $lang:String!){
 }
 `
 
+export const LINK_RECS_QUERY = gql`
+query LinkRec{
+  linkRecommendations @client {
+    title
+    link
+    recommendations{
+      art_id
+      link
+      title
+      date
+    }
+    }
+  }
+`
+
