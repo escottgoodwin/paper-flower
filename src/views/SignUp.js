@@ -38,19 +38,26 @@ class SignUp extends Component {
   <div style={{paddingRight:'30%',paddingLeft:'30%',paddingTop:'10%',paddingBottom:'10%'}} >
 
     <center>
-    <div style={{margin:20}}>
+    
 
     <Card className="card-stats">
     <CardHeader>
-      <div>
-        <h5>Langa Learn</h5>
-      </div>
-      <div>
-        <h3>Sign Up</h3>
-      </div>
+      
     </CardHeader>
     <CardBody>
 
+   
+    <Row>
+    <Col md="12">
+      <h5>Langa Learn</h5>
+    </Col>
+    </Row>
+        
+    <Row>
+    <Col  md="12">
+      <h3>Sign Up</h3>
+    </Col>
+    </Row>
 
     <Row>
     <Col  md="3">
@@ -92,10 +99,6 @@ class SignUp extends Component {
         }
       </Col>
     </Row>
-
-    
-        
-
       <Row>
         <Col>
         <div style={{marginBottom:40}}>
@@ -109,7 +112,7 @@ class SignUp extends Component {
       </CardBody>
     </Card>
 
-      </div>
+     
     </center>
   </div>
 </div>

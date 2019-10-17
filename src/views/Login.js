@@ -125,15 +125,23 @@ class Login extends Component {
     <div style={{margin:20}}>
 
     <Card className="card-stats">
-    <CardHeader>
-      <div>
-        <h5>Langa Learn</h5>
-      </div>
-      <div>
-        <h3>Login</h3>
-      </div>
-    </CardHeader>
+    
     <CardBody>
+
+    <Row>
+    <Col md="12">
+    <div style={{marginTop:50}}>
+      <h5>Langa Learn</h5>
+      </div>
+    </Col>
+    </Row>
+        
+    <Row>
+    <Col  md="12">
+      <h3>Login</h3>
+    </Col>
+    </Row>
+
 
         <Row>
           <Col  md="4">
@@ -192,9 +200,7 @@ class Login extends Component {
     </Card>
 
     <div style={{height:50}}>
-    <Alert color="danger" isOpen={showError} toggle={this.onDismiss}>
-      <b>Error</b> {errorMessage}
-    </Alert>
+    
     </div>
       </div>
     </center>
