@@ -74,3 +74,16 @@ query LinkRec{
   }
 `
 
+export const ARTICLE_REC_QUERY = gql`
+query ArticleRecommendation($lang:String!){
+  articleRecommendations(lang:$lang){
+   recs{
+    link
+    title
+    date
+    lang
+    art_id
+  }
+  }
+}`
+

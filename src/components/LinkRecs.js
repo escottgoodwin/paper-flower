@@ -9,8 +9,7 @@ import {
 import { Query } from "react-apollo"
 import { LINK_RECS_QUERY } from '../ApolloQueries'
 
-
-
+import LinkRec from './LinkRec'
 
 class LinkRecs extends Component{
 
@@ -45,21 +44,7 @@ class LinkRecs extends Component{
 
                       {
                         recommendations.map(r => 
-                        <div key={r.art_id}>
-                        <div>{moment(r.date).format('MMMM Do YYYY')}</div>
-                        <div>
-                          <Link 
-                              to={{ 
-                              pathname: '/admin/article', 
-                              state: {
-                                art_id: r.art_id,
-                                lang
-                              }
-                              }}>
-                            <h5>{r.title}</h5>
-                          </Link>
-                          </div>
-                          </div>
+                          <LinkRec key={r.art_id} lang={lang} {...r} />
                         )
                       }
 
@@ -73,8 +58,8 @@ class LinkRecs extends Component{
           }}
        </Query>
 
-  )
-  }
+      )
+    }
   }
 
 export default LinkRecs

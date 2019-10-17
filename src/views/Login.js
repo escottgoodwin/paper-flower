@@ -2,6 +2,7 @@ import React,{Component} from "react";
 import firebase from 'firebase/app';
 import 'firebase/auth'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 // nodejs library to set properties for components
 import { FaFacebook, FaGooglePlusSquare, FaTwitterSquare } from 'react-icons/fa';
 // @material-ui/core components
@@ -17,15 +18,12 @@ import {
   Row,
   Col,
   Alert,
-  Toast
 } from "reactstrap";
 
 import fire from '../firebase'
 
-import logo from "assets/img/flower_2.png";
 import bkgd from "assets/img/loginmap1.jpg";
 import { LOGIN_MUTATION } from '../ApolloQueries'
-const database = fire.firestore()
 
 var google = new firebase.auth.GoogleAuthProvider();
 
@@ -177,6 +175,14 @@ class Login extends Component {
                   </Col>
               </Row>
           </Form>
+
+          <Row>
+            <Col>
+            <Link to="/sign_up"> 
+                Sign Up
+            </Link>
+            </Col>
+          </Row>
         </div>
       </CardBody>
     </Card>

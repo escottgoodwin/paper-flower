@@ -35,8 +35,7 @@ const client = new ApolloClient({
   resolvers: {
     Query: {
       linkRecommendations: (recs, _args, { cache }) => {
-        const { newrecs } = cache.readQuery({ query: LINK_RECS_QUERY });
-        return newrecs
+        return cache.readQuery({ query: LINK_RECS_QUERY })
       },
     },
   }

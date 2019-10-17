@@ -26,7 +26,7 @@ class Article extends Component{
 
         <Query query={ARTICLE_QUERY} variables={{ artId: art_id, lang }} >
             {({ loading, error, data }) => {
-                if (loading) return <div style={{height:'100vh',backgroundColor:'#e4f1fe'}} > </div>
+                if (loading) return <div style={{height:'100vh',backgroundColor:'#F4F3EF'}} > </div>
                 if (error) return <div>{JSON.stringify(error)}</div>
 
                 const { article, title, link, date, translations } = data.article
