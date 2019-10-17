@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Flag from 'react-world-flags'
 
 import {
   Row,
@@ -43,34 +44,39 @@ function Dashboard(){
           <Row fluid='true'>
             <Col lg="3" md="6" sm="3">
 
-              <div >
-                <h4 onClick={() => switchLang('fr')}>French</h4>
+              <div onClick={() => switchLang('fr')}>
+              
+              <h4> <Flag code="fr" height="30" /> French</h4>
               </div>
             
             </Col>
             <Col lg="3" md="6" sm="3">
 
-              <div >
-                <h4 onClick={() => switchLang('de')}>German</h4>
+              <div onClick={() => switchLang('de')}>
+              
+                <h4 > <Flag code="de" height="30" /> German</h4>
               </div>
 
             </Col>
             <Col lg="3" md="3" sm="3" >
 
               <div onClick={() => switchLang('en')}>
-                <h4>English</h4>
+              
+                <h4><Flag code="gb" height="30" /> English</h4>
               </div>
 
             </Col>
             <Col lg="3" md="6" sm="6" >
 
               <div onClick={() => switchLang('es')}>
-                <h4>Spanish</h4>
+              
+                <h4><Flag code="es" height="30" /> Spanish</h4>
               </div>
 
             </Col>
+           
           </Row>
-
+          <hr />
           <Row fluid='true'>
             <Col md="12" >
               <ArtRecs lang={lang} flag={flag} language={language}/>

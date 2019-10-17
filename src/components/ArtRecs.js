@@ -1,6 +1,5 @@
 import React,{Component} from "react";
-import {Link} from 'react-router-dom'
-import moment from 'moment'
+import Flag from 'react-world-flags'
 import {
   Row,
   Col,
@@ -32,7 +31,8 @@ class ArtRecs extends Component{
                 { articleRecommendations[0].recs.length>0 &&
                 <>
                   <div >
-                    <h5>{language} Recommendations</h5>
+                  
+                    <h5> {language} Recommendations</h5>
                   </div>
 
                   {
@@ -40,7 +40,7 @@ class ArtRecs extends Component{
 
                       <>
                         <div>
-                          <h5>Cluster {i+1}</h5>
+                          <h5><Flag code={flag} height="24" /> Cluster {i+1}</h5>
                         </div>
                         <div>
                           {r.recs.map(r => 

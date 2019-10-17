@@ -20,8 +20,13 @@ import SignUpFacebook from '../components/SignUpFacebook'
 
 class SignUp extends Component {
 
+  state ={ 
+    signIn:'email'
+  }
+
   render(){
 
+  const { signIn} = this.state
   return (
 
     <div style={{
@@ -47,20 +52,43 @@ class SignUp extends Component {
     <CardBody>
 
     <Row>
+    <Col  md="4">
+        
+        <FaGooglePlusSquare onClick={() => this.setState({signIn:'email'})} size={32} />
+        
+    </Col>
+
       <Col  md="4">
-        <Link to="/signupgoogle"> 
-          <FaGooglePlusSquare size={32} />
-          </Link>
+        
+          <FaGooglePlusSquare onClick={() => this.setState({signIn:'google'})} size={32} />
+          
       </Col>
       <Col  md="4">
-      <Link to="/signuptwitter"> 
-        <FaTwitterSquare size={32}/>
-        </Link>
+      
+        <FaTwitterSquare onClick={() => this.setState({signIn:'twitter'})} size={32}/>
+        
       </Col>
       <Col  md="4">
-      <Link to="/signupfacebook"> 
-        <FaFacebook size={32} />
-        </Link>
+     
+        <FaFacebook onClick={() => this.setState({signIn:'facebook'})} size={32} />
+       
+      </Col>
+    </Row>
+
+    <Row>
+      <Col  md="4">
+        {signIn==='email' &&
+         <SignUpEmail />
+        }
+        {signIn==='google' &&
+         <SignUpGoogle />
+        }
+        {signIn==='twitter' &&
+         <SignUpTwitter />
+        }
+        {signIn==='facebook' &&
+         <SignUpFacebook />
+        }
       </Col>
     </Row>
 
