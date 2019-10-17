@@ -65,6 +65,7 @@ class Login extends Component {
   googleSignIn = (props) => {
 
     fire.auth().signInWithPopup(google).then(function(result) {
+      console.log(result.user)
       processLogin(result.user.uid,props)
     }).catch((error) => {
       var errorMessage = error.message;
@@ -177,12 +178,15 @@ class Login extends Component {
           </Form>
 
           <Row>
-            <Col>
-            <Link to="/sign_up"> 
-                Sign Up
-            </Link>
-            </Col>
-          </Row>
+        <Col>
+        <div style={{marginTop:30}}>
+        <Link to="/sign_up"> 
+          <h5>Sign Up</h5>  
+        </Link>
+        </div>
+        </Col>
+      </Row>
+
         </div>
       </CardBody>
     </Card>

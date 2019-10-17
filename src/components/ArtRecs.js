@@ -18,27 +18,29 @@ class ArtRecs extends Component{
 
       <Query  query={ARTICLE_REC_QUERY}
               variables={{ lang }}  >
-        {({ loading, error, data }) => {
+            {({ loading, error, data }) => {
             if (loading) return <div style={{height:'100vh',backgroundColor:'#F4F3EF'}} > </div>
             if (error) return <div>{JSON.stringify(error)}</div>
 
             const { articleRecommendations } = data
-              console.log(articleRecommendations)
+            console.log(articleRecommendations)
             return (
 
               <Row >
                 <Col md="12">
-                { articleRecommendations[0].recs.length>0 &&
+                { articleRecommendations.length>0 &&
                 <>
                   <div >
                   
                     <h5> {language} Recommendations</h5>
                   </div>
 
+                
                   {
                     articleRecommendations.map((r,i) => 
-
-                      <>
+                    <div>
+                    {r.recs.length>0 &&
+                      <div>
                         <div>
                           <h5><Flag code={flag} height="24" /> Cluster {i+1}</h5>
                         </div>
@@ -47,9 +49,12 @@ class ArtRecs extends Component{
                             <LinkRec key={r.art_id} lang={lang} {...r} />
                           )}
                         </div>
-                      </>
+                      </div>
+                    }
+                    </div>
                     )
                   }
+                 
                   </>
                   }
                 </Col>

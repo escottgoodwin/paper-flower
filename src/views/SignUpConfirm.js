@@ -43,17 +43,22 @@ function SignUpConfirm() {
     <CardBody>
 
         <Row>
-          <Col  md="12">
-            Please check your email to confirm.
+          <Col md="12">
+            <h4>Please check your email to confirm your account.</h4>
           </Col>  
         </Row>
+        
         <Row>
         <Col>
+        <div style={{marginBottom:40}}>
         <Link to="/login"> 
-            Login
+          <h5>Login</h5>  
         </Link>
+        </div>
         </Col>
       </Row>
+        
+        
       </CardBody>
     </Card>
 

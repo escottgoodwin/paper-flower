@@ -18,9 +18,9 @@ const App = () =>
     <Switch>
       <Route path="/admin" render={props => <AdminLayout {...props} />} />
       <Route path="/login" component={Login} />
-      <Route path="/" component={Login} />
+      <Route exact path="/" component={Login} />
       <Route path="/sign_up" component={SignUp} />
-      <Route path="/test" component={Dashboard} />
+      <Route path="/test" component={SignUpConfirm} />
       <Route path="/sign_up_confirm" component={SignUpConfirm} />
     </Switch>
  

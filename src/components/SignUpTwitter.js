@@ -2,6 +2,7 @@ import React,{Component} from "react";
 import firebase from 'firebase/app';
 import 'firebase/auth'
 import axios from 'axios'
+import { withRouter } from 'react-router-dom'
 
 import {
   Button,
@@ -20,20 +21,23 @@ import { SIGNUP_MUTATION } from '../ApolloQueries'
 var twitter = new firebase.auth.TwitterAuthProvider();
 
 
-const processLogin = (uid,props) => {
-  localStorage.setItem('uid',uid)
+const processSignUp = (uid, email, name, nativeLang, history) => {
+
   axios({
     // Of course the url should be where your actual GraphQL server is.
     url: process.env.REACT_APP_GRAPHQL_SERVER,
     method: 'post',
     data: {
         query: SIGNUP_MUTATION,
-        variables: { uid }
+        variables: { uid, email, password:'', name, nativeLang,  }
     }
   }).then((result) => {
-      console.log(result.data)
-      localStorage.setItem('auth_token',result.data.data.login.token)
-      props.history.push(`/admin/dashboard`)
+    history.push('sign_up_confirm')
+    
+  })
+  .catch((error) => {
+    var errorMessage = error.message;
+    
   })
 
 }
@@ -47,13 +51,15 @@ class SignUpTwitter extends Component {
     showError:false,
     errorMessage:'',
     nativeLang:'',
+    nativeLanguage:'Choose',
     dropdownOpen:false
   }
 
-  twitterSignIn = (props) => {
+  twitterSignUp = (name, nativeLang, history) => {
 
     fire.auth().signInWithPopup(twitter).then(function(result) {
-      processLogin(result.user.uid,props)
+      const { uid, email } = result.user
+      processSignUp(uid, email, name, nativeLang, history)
     }).catch((error) => {
       var errorMessage = error.message;
       this.setState({errorMessage,showError:true})
@@ -65,8 +71,8 @@ class SignUpTwitter extends Component {
   toggle = () => this.setState({dropdownOpen: !this.state.dropdownOpen})
 
   render(){
-
-      const { name, password, email, showError, errorMessage, nativeLang } = this.state
+    const { history } = this.props
+    const { name, nativeLang, nativeLanguage } = this.state
 
   return (
 
@@ -92,13 +98,13 @@ class SignUpTwitter extends Component {
                   </label>
                   <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle caret>
-                        {nativeLang}
+                        {nativeLanguage}
                     </DropdownToggle>
                     <DropdownMenu>
-                        <DropdownItem onClick={() => this.setState({nativeLang:'en'})}>English</DropdownItem>
-                        <DropdownItem onClick={() => this.setState({nativeLang:'fr'})}>French</DropdownItem>
-                        <DropdownItem onClick={() => this.setState({nativeLang:'de'})}>German</DropdownItem>
-                        <DropdownItem onClick={() => this.setState({nativeLang:'es'})}>Spanish</DropdownItem>
+                        <DropdownItem onClick={() => this.setState({nativeLang:'en',nativeLanguage:'English'})}>English</DropdownItem>
+                        <DropdownItem onClick={() => this.setState({nativeLang:'fr',nativeLanguage:'French'})}>French</DropdownItem>
+                        <DropdownItem onClick={() => this.setState({nativeLang:'de',nativeLanguage:'German'})}>German</DropdownItem>
+                        <DropdownItem onClick={() => this.setState({nativeLang:'es',nativeLanguage:'Spanish'})}>Spanish</DropdownItem>
                     </DropdownMenu>
                     </Dropdown>
                 </FormGroup>
@@ -107,7 +113,7 @@ class SignUpTwitter extends Component {
 
               <Row>
                 <Col className="pl-1" md="12">
-                  <Button onClick={() => this.emailSignIn(this.props)} variant="primary" >
+                  <Button onClick={() => this.twitterSignUp(name, nativeLang, history)} variant="primary" >
                     Sign Up With Twitter
                   </Button>
                   </Col>
@@ -120,4 +126,4 @@ class SignUpTwitter extends Component {
 
 };
 
-export default SignUpTwitter
+export default withRouter(SignUpTwitter)

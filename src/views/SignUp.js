@@ -1,6 +1,6 @@
 import React,{Component} from "react";
 import { Link, Switch, Route } from 'react-router-dom'
-import { FaFacebook, FaGooglePlusSquare, FaTwitterSquare } from 'react-icons/fa';
+import { FaFacebook, FaGooglePlusSquare, FaTwitterSquare,FaAt } from 'react-icons/fa';
 
 import {
   Card,
@@ -51,24 +51,25 @@ class SignUp extends Component {
     </CardHeader>
     <CardBody>
 
+
     <Row>
-    <Col  md="4">
+    <Col  md="3">
         
-        <FaGooglePlusSquare onClick={() => this.setState({signIn:'email'})} size={32} />
+        <FaAt onClick={() => this.setState({signIn:'email'})} size={32} />
         
     </Col>
 
-      <Col  md="4">
+      <Col  md="3">
         
           <FaGooglePlusSquare onClick={() => this.setState({signIn:'google'})} size={32} />
           
       </Col>
-      <Col  md="4">
+      <Col  md="3">
       
         <FaTwitterSquare onClick={() => this.setState({signIn:'twitter'})} size={32}/>
         
       </Col>
-      <Col  md="4">
+      <Col  md="3">
      
         <FaFacebook onClick={() => this.setState({signIn:'facebook'})} size={32} />
        
@@ -76,18 +77,18 @@ class SignUp extends Component {
     </Row>
 
     <Row>
-      <Col  md="4">
+      <Col  md="12">
         {signIn==='email' &&
-         <SignUpEmail />
+         <SignUpEmail history={this.props.history}/>
         }
         {signIn==='google' &&
-         <SignUpGoogle />
+         <SignUpGoogle history={this.props.history}/>
         }
         {signIn==='twitter' &&
-         <SignUpTwitter />
+         <SignUpTwitter history={this.props.history}/>
         }
         {signIn==='facebook' &&
-         <SignUpFacebook />
+         <SignUpFacebook history={this.props.history}/>
         }
       </Col>
     </Row>
@@ -97,9 +98,11 @@ class SignUp extends Component {
 
       <Row>
         <Col>
+        <div style={{marginBottom:40}}>
         <Link to="/login"> 
-            Login
+          <h5>Login</h5>  
         </Link>
+        </div>
         </Col>
       </Row>
       
