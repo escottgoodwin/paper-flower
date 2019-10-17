@@ -4,17 +4,10 @@ import {
   Row,
   Col,
   Container,
-  Input,
-  Button,
-  ButtonGroup,
-  Alert
 } from "reactstrap";
 
 import { Query } from "react-apollo"
 import { ARTICLE_QUERY } from '../ApolloQueries'
-
-import LinkRecs1 from '../components/LinkRecs'
-import { FaRegCaretSquareUp } from "react-icons/fa";
 
 class Article extends Component{
 
@@ -41,7 +34,7 @@ class Article extends Component{
                 <Row fluid='true'>
                 <Col lg="12" md="12" sm="12">
                 <div>{moment(date).format('MMMM Do YYYY')}</div>
-                <div><h3><a href={link} target="_blank">{title}</a></h3></div>
+                <div><h3><a href={link} target="_blank" rel="noopener noreferrer">{title}</a></h3></div>
               
                 </Col>
                   

@@ -2,7 +2,6 @@ import React,{Component} from "react";
 import firebase from 'firebase/app';
 import 'firebase/auth'
 import axios from 'axios'
-import { withRouter } from 'react-router-dom'
 
 import {
   Button,
@@ -11,7 +10,10 @@ import {
   Input,
   Row,
   Col,
-  Dropdown, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem
+  Dropdown, 
+  DropdownToggle,
+  DropdownMenu, 
+  DropdownItem
 } from "reactstrap";
 
 import fire from '../firebase'
@@ -35,7 +37,7 @@ const processSignUp = (uid, email, name, nativeLang, history) => {
     
   })
   .catch((error) => {
-    var errorMessage = error.message;
+    
     
   })
 
@@ -126,4 +128,4 @@ class SignUpFacebook extends Component {
 
 };
 
-export default withRouter(SignUpFacebook)
+export default SignUpFacebook

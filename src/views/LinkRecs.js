@@ -14,7 +14,6 @@ import { Mutation } from "react-apollo"
 import { LINK_RECS_QUERY, SINGLE_LINK_MUTATION } from '../ApolloQueries'
 
 import LinkRecs1 from '../components/LinkRecs'
-import { FaRegCaretSquareUp } from "react-icons/fa";
 
 class LinkRecs extends Component{
 
@@ -23,18 +22,12 @@ class LinkRecs extends Component{
     transLang:'',
     error:false,
     errormsg:'',
-    recresp:{
-      title: '',
-      link: '',
-      langt:'',
-      recommendations:[]
-    }
   }
 
   onDismiss = () => this.setState({ error: false })
 
   render(){
-    const { link, transLang, error, errormsg, recresp } = this.state
+    const { link, transLang, error, errormsg } = this.state
     return(
 
         <div className="content">

@@ -3,28 +3,21 @@ import firebase from 'firebase/app';
 
 import 'firebase/auth'
 import axios from 'axios'
-// nodejs library to set properties for components
-import { FaFacebook, FaGooglePlusSquare, FaTwitterSquare } from 'react-icons/fa';
-// @material-ui/core components
 
 import {
   Button,
-  Card,
-  CardHeader,
-  CardBody,
   FormGroup,
   Form,
   Input,
   Row,
   Col,
-  Alert,
-  Toast,
-  Dropdown, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem
+  Dropdown, 
+  DropdownToggle,
+  DropdownMenu, 
+  DropdownItem
 } from "reactstrap";
 
-import fire from '../firebase'
 import { SIGNUP_MUTATION } from '../ApolloQueries'
-
 
 const processSignUp = (uid, email, name, nativeLang, history) => {
 
@@ -41,7 +34,7 @@ const processSignUp = (uid, email, name, nativeLang, history) => {
     
   })
   .catch((error) => {
-    var errorMessage = error.message;
+    
     
   })
 
@@ -83,7 +76,7 @@ class SignUpEmail extends Component {
 
   render(){
       const { history } = this.props
-      const { name, password, email, showError, errorMessage, nativeLang, dropdownOpen, nativeLanguage, signedUp } = this.state
+      const { name, password, email, nativeLang, nativeLanguage, signedUp } = this.state
 
   return (
 

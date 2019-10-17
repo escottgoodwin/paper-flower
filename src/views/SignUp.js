@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import { Link, Switch, Route } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { FaFacebook, FaGooglePlusSquare, FaTwitterSquare,FaAt } from 'react-icons/fa';
 
 import {
@@ -10,7 +10,6 @@ import {
   Col,
 } from "reactstrap";
 
-import logo from "assets/img/flower_2.png";
 import bkgd from "assets/img/loginmap1.jpg";
 
 import SignUpEmail from '../components/SignUpEmail'

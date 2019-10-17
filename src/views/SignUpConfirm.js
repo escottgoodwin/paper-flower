@@ -1,8 +1,7 @@
-import React,{Component} from "react";
+import React from "react";
 import { Link } from 'react-router-dom'
 
 import {
-  Button,
   Card,
   CardHeader,
   CardBody,
@@ -10,9 +9,6 @@ import {
   Col,
 } from "reactstrap";
 
-import fire from '../firebase'
-
-import logo from "assets/img/flower_2.png";
 import bkgd from "assets/img/loginmap1.jpg";
 
 

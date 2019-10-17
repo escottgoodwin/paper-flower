@@ -8,7 +8,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloProvider } from 'react-apollo'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import { typeDefs, resolvers } from './resolvers';
+import { typeDefs } from './resolvers';
 import App from './App'
 
 import { LINK_RECS_QUERY } from './ApolloQueries'

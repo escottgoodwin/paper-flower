@@ -1,6 +1,4 @@
 import React,{Component} from "react";
-import {Link} from 'react-router-dom'
-import moment from 'moment'
 import {
   Row,
   Col,
@@ -35,7 +33,7 @@ class LinkRecs extends Component{
                       </div>
 
                     <div>
-                      <h3><a href={link} target="_blank">{title}</a></h3>
+                      <h3><a href={link} target="_blank" rel="noopener noreferrer">{title}</a></h3>
                       </div>
 
                     <div>

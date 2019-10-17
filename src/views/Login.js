@@ -10,14 +10,12 @@ import { FaFacebook, FaGooglePlusSquare, FaTwitterSquare } from 'react-icons/fa'
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
   FormGroup,
   Form,
   Input,
   Row,
   Col,
-  Alert,
 } from "reactstrap";
 
 import fire from '../firebase'
@@ -109,7 +107,6 @@ class Login extends Component {
   onDismiss = () => this.setState({showError:false})
 
   render(){
-      const { showError, errorMessage } = this.state
 
   return (
 
